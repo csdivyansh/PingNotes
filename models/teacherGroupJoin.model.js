@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const teacherGroupJoinSchema = new mongoose.Schema({
-  teacher_group_id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   teacher_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Teacher",

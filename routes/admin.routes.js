@@ -1,11 +1,19 @@
 import express from "express";
-import { getAllAdmins, createNewAdmin, deleteAdmin } from "../controllers/admin/admin.controller.js";
+import { requireAuth } from "../middlewares/auth.middleware.js";
+import { getAllAdmins, createNewAdmin, deleteAdmin, updateAdmin, getAdminById, loginAdmin} from "../controllers/admin/admin.controller.js";
 
 const router = express.Router();
 
+// 🔓 Public route
+router.post("/login", loginAdmin);
+
+
+// 🔐 Protected routes
+router.use(requireAuth);
+router.post("/", createNewAdmin);
 router.get("/", getAllAdmins);
-router.post("/create", createNewAdmin);
-router.delete("/delete/:id", deleteAdmin); 
-router.put("/update/:id", createNewAdmin);
+router.get("/:id", getAdminById);
+router.delete("/:id", deleteAdmin); 
+router.put("/:id", updateAdmin);
 
 export default router;

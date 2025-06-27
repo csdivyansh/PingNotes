@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const noteSchema = new mongoose.Schema({
-  note_id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true },
   description: { type: String },
   group_id: {

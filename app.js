@@ -19,11 +19,11 @@ app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
 // Routes
-app.use("/", rootRoutes);
-app.use("/teacher", teacherRoutes);
-app.use("/user", userRoutes);
-app.use("/group", groupRoutes); 
-app.use("/admin", adminRoutes);
+app.use('/', rootRoutes)
+app.use('/admin', adminRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/groups', groupRoutes)
+app.use('/api/teachers', teacherRoutes)
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

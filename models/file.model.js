@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const fileSchema = new mongoose.Schema({
-  file_id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   file_name: { type: String, required: true },
   file_type: { type: String, required: true },
   file_url: { type: String, required: true },
