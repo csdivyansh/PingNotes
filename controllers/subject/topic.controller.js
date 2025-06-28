@@ -1,6 +1,6 @@
-import Subject from "../../models/subject.model.js";
+import Topic from "../../models/subject.model.js";
 
-export const getAllSubjects = async (req, res) => {
-  const subjects = await Subject.find();
-  res.json(subjects);
+export const getAllTopics = async (req, res) => {
+  const topics = await Topic.find();
+  res.json(topics);
 };

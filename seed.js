@@ -60,8 +60,25 @@ try {
   await User.deleteMany({});
   await Teacher.deleteMany({});
 
-  const insertedUsers = await User.insertMany(users);
-  const insertedTeachers = await Teacher.insertMany(teachers);
+  const insertedUsers = [];
+  for (const u of users) {
+    const user = new User(u);
+    await user.save();
+    insertedUsers.push(user);
+  }
+
+  const insertedTeachers = [];
+  for (const t of teachers) {
+    const teacher = new Teacher({
+      name: t.name,
+      email: t.email,
+      password: t.password,
+      department: t.department, // assuming your schema uses `subject`
+    });
+    await teacher.save();
+    insertedTeachers.push(teacher);
+  }
+
 
   console.log("✔️ Users inserted:", insertedUsers.length);
   console.log("✔️ Teachers inserted:", insertedTeachers.length);

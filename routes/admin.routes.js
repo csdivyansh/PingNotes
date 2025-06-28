@@ -9,7 +9,7 @@ router.post("/login", loginAdmin);
 
 
 // 🔐 Protected routes
-router.use(requireAuth);
+router.use(requireAuth(["admin"]));
 router.post("/", createNewAdmin);
 router.get("/", getAllAdmins);
 router.get("/:id", getAdminById);

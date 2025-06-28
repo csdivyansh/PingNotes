@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/login", loginUser);
 
 // Protected routes
-router.use(requireAuth);
+router.use(requireAuth(["user"]));
 
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
