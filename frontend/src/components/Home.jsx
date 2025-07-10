@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // You can replace this with a logo SVG or image if available
 const Logo = () => (
@@ -9,6 +10,7 @@ const Logo = () => (
 );
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div style={{ fontFamily: 'Poppins, Arial, sans-serif', background: '#f9fbfd', minHeight: '100vh' }}>
       {/* Top Banner */}
@@ -24,7 +26,7 @@ const Home = () => {
           <a href="#faqs" style={{ color: '#0a192f', textDecoration: 'none' }}>FAQs</a>
           <a href="#about" style={{ color: '#0a192f', textDecoration: 'none' }}>About</a>
         </div>
-        <a href="#login" style={{ background: '#0078FF', color: '#fff', padding: '10px 28px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,120,255,0.08)' }}>Login / Register</a>
+        <button onClick={() => navigate('/login')} style={{ background: '#0078FF', color: '#fff', padding: '10px 28px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,120,255,0.08)', border: 'none', cursor: 'pointer' }}>Login / Register</button>
       </nav>
       {/* Hero Section */}
       {/* Motto & Description */}
