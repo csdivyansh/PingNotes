@@ -1,25 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiService from "../services/api.js";
+import apiService from "../services/api";
 
-const ACCENT_COLOR = "#a259ff"; // Modern purple
-const BG_COLOR = "#181824";
-const CARD_COLOR = "#232336";
-const TEXT_COLOR = "#f3f3f7";
-const ERROR_COLOR = "#ff4d6d";
+const ACCENT = "#a259ff";
+const BG = "#181824";
+const CARD = "#232336";
+const TEXT = "#f3f3f7";
+const ERROR = "#ff4d6d";
 
-export default function AdminLogin({ onLogin }) {
+export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -27,16 +25,12 @@ export default function AdminLogin({ onLogin }) {
     setLoading(true);
     try {
       const data = await apiService.adminLogin(email, password);
-      setSuccess(true);
-      // Store JWT token in localStorage
       if (data.token) {
         localStorage.setItem("adminToken", data.token);
-      }
-      if (onLogin) onLogin(data);
-      // Redirect to admin dashboard after login
-      setTimeout(() => {
         navigate("/admin/dashboard");
-      }, 800);
+      } else {
+        setError("Invalid response from server.");
+      }
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
     } finally {
@@ -47,11 +41,11 @@ export default function AdminLogin({ onLogin }) {
   return (
     <div style={styles.bg}>
       <form style={styles.card} onSubmit={handleSubmit} autoComplete="off">
-        {/* Logo Placeholder */}
         <div style={styles.logoCircle}>
           <span style={styles.logoText}>PN</span>
         </div>
-        <h2 style={styles.title}>Admin Login</h2>
+        <h2 style={styles.title}>PingNotes Admin Login</h2>
+        <p style={styles.subtitle}>Sign in to access the admin dashboard</p>
         <div style={styles.inputGroup}>
           <label style={styles.label} htmlFor="email">Email</label>
           <input
@@ -62,6 +56,7 @@ export default function AdminLogin({ onLogin }) {
             onChange={e => setEmail(e.target.value)}
             autoFocus
             autoComplete="email"
+            placeholder="admin@email.com"
           />
         </div>
         <div style={styles.inputGroup}>
@@ -73,10 +68,10 @@ export default function AdminLogin({ onLogin }) {
             value={password}
             onChange={e => setPassword(e.target.value)}
             autoComplete="current-password"
+            placeholder="••••••••"
           />
         </div>
         {error && <div style={styles.error}>{error}</div>}
-        {success && <div style={styles.success}>Login successful! Redirecting...</div>}
         <button
           type="submit"
           style={{
@@ -88,6 +83,7 @@ export default function AdminLogin({ onLogin }) {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+        <div style={styles.footerText}>© 2024 PingNotes Admin Portal</div>
       </form>
     </div>
   );
@@ -96,13 +92,13 @@ export default function AdminLogin({ onLogin }) {
 const styles = {
   bg: {
     minHeight: "100vh",
-    background: BG_COLOR,
+    background: BG,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   card: {
-    background: CARD_COLOR,
+    background: CARD,
     padding: "2.5rem 2rem 2rem 2rem",
     borderRadius: "1.2rem",
     boxShadow: "0 4px 32px 0 rgba(0,0,0,0.25)",
@@ -117,7 +113,7 @@ const styles = {
     width: 64,
     height: 64,
     borderRadius: "50%",
-    background: ACCENT_COLOR,
+    background: ACCENT,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -132,12 +128,20 @@ const styles = {
     fontFamily: "monospace",
   },
   title: {
-    color: TEXT_COLOR,
+    color: TEXT,
     fontWeight: 600,
     fontSize: 24,
-    marginBottom: 24,
+    marginBottom: 8,
     marginTop: 0,
     letterSpacing: 1,
+  },
+  subtitle: {
+    color: TEXT,
+    fontSize: 15,
+    opacity: 0.7,
+    marginBottom: 24,
+    marginTop: 0,
+    textAlign: "center",
   },
   inputGroup: {
     width: "100%",
@@ -146,7 +150,7 @@ const styles = {
     flexDirection: "column",
   },
   label: {
-    color: TEXT_COLOR,
+    color: TEXT,
     fontSize: 14,
     marginBottom: 6,
     fontWeight: 500,
@@ -158,7 +162,7 @@ const styles = {
     border: "none",
     outline: "none",
     background: "#1e1e2f",
-    color: TEXT_COLOR,
+    color: TEXT,
     fontSize: 16,
     marginBottom: 2,
     boxShadow: "0 1px 4px 0 rgba(0,0,0,0.08)",
@@ -169,7 +173,7 @@ const styles = {
     padding: "0.8rem 0",
     borderRadius: 8,
     border: "none",
-    background: ACCENT_COLOR,
+    background: ACCENT,
     color: "#fff",
     fontWeight: 700,
     fontSize: 17,
@@ -179,7 +183,7 @@ const styles = {
     transition: "background 0.2s, opacity 0.2s",
   },
   error: {
-    color: ERROR_COLOR,
+    color: ERROR,
     background: "rgba(255,77,109,0.08)",
     borderRadius: 6,
     padding: "6px 12px",
@@ -188,15 +192,11 @@ const styles = {
     width: "100%",
     textAlign: "center",
   },
-  success: {
-    color: ACCENT_COLOR,
-    background: "rgba(162,89,255,0.08)",
-    borderRadius: 6,
-    padding: "6px 12px",
-    fontSize: 14,
-    marginBottom: 10,
-    width: "100%",
+  footerText: {
+    color: TEXT,
+    opacity: 0.5,
+    fontSize: 13,
+    marginTop: 24,
     textAlign: "center",
-    fontWeight: 600,
   },
 }; 

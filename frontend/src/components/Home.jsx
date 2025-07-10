@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import pnLogo from '../assets/pn_logo.png';
 
 // You can replace this with a logo SVG or image if available
 const Logo = () => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-    <div style={{ width: 32, height: 32, background: '#0078FF', borderRadius: 8 }} />
-    <span style={{ fontWeight: 700, fontSize: 24, color: '#0a192f', letterSpacing: 1 }}>PingNotes</span>
+    <span style={{ fontWeight: 700, fontSize: 24, color: '#0a192f', letterSpacing: 1 }}>Pingnotes</span>
   </div>
 );
 
@@ -30,9 +30,10 @@ const Home = () => {
       </nav>
       {/* Hero Section */}
       {/* Motto & Description */}
-      <section style={{ margin: '64px auto 0 auto', maxWidth: 1100, textAlign: 'center' }}>
+      <section style={{ alignItems: 'center', textAlign: 'center' }}>
+        <img src={pnLogo} alt="PingNotes Logo" style={{ width: 200, height: 200, filter: 'drop-shadow(0 0 32px #0078FF55)' }} />
         <div style={{ fontSize: 72, fontWeight: 800, color: '#0078FF', letterSpacing: 2, marginBottom: 0, lineHeight: 1.1 }}>
-          Ping<span style={{ color: '#0a192f' }}>Notes</span>
+          Ping<span style={{ color: '#0a192f' }}>notes</span>
         </div>
         <div style={{ fontSize: 44, fontWeight: 700, color: '#0a192f', margin: '12px 0 0 0', lineHeight: 1.1 }}>
           Notes Organisation <span style={{ color: '#0078FF' }}>Simplified</span>
