@@ -1,12 +1,93 @@
-# React + Vite
+# PingNotes Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React frontend for the PingNotes application.
 
-Currently, two official plugins are available:
+## Setup and Connection with Backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
+- Node.js (v16 or higher)
+- Backend server running on port 5000
 
-## Expanding the ESLint configuration
+### Installation
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Development
+```bash
+npm run dev
+```
+
+The frontend will start on `http://localhost:5173` (or the next available port).
+
+### Backend Connection
+
+The frontend is configured to connect to the backend through:
+
+1. **Vite Proxy Configuration**: The `vite.config.js` file includes a proxy that forwards API calls to the backend server running on `http://localhost:5000`.
+
+2. **API Service**: All backend communication is handled through the centralized `src/services/api.js` service.
+
+### Environment Variables
+
+Create a `.env` file in the frontend directory (optional):
+```
+VITE_API_URL=http://localhost:5000
+```
+
+### API Endpoints
+
+The frontend can access the following backend endpoints:
+
+- **Authentication**: `/api/auth/*`, `/api/admin/*`
+- **Users**: `/api/users/*`
+- **Groups**: `/api/groups/*`
+- **Notes**: `/api/notes/*`
+- **Subjects**: `/api/subjects/*`
+- **Teachers**: `/api/teachers/*`
+- **Files**: `/api/files/*`
+
+### Authentication
+
+The application uses JWT tokens stored in localStorage:
+- `adminToken` for admin users
+- `userToken` for regular users
+
+### Running Both Frontend and Backend
+
+1. Start the backend server:
+   ```bash
+   cd backend
+   npm start
+   ```
+
+2. Start the frontend development server:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+3. Access the application:
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000
+
+### Troubleshooting
+
+1. **CORS Issues**: The backend has CORS enabled, but if you encounter issues, check that the backend is running on port 5000.
+
+2. **API Connection**: If API calls fail, verify:
+   - Backend server is running
+   - Proxy configuration in `vite.config.js` is correct
+   - API endpoints match between frontend and backend
+
+3. **Authentication**: If login fails, check:
+   - Backend authentication routes are working
+   - JWT token is being stored correctly
+   - API service is using the correct endpoints
+
+### Development Workflow
+
+1. Make changes to frontend components
+2. The Vite dev server will hot-reload changes
+3. API calls will be proxied to the backend automatically
+4. Test authentication and data flow between frontend and backend

@@ -40,7 +40,7 @@ app.use('/api/notes', noteRoutes);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/teachers', teacherRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes); 
 app.use('/api/files', fileRoutes);
 
 // 404 handler for undefined routes

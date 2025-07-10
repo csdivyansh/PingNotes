@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiService from "../services/api.js";
 
 const ACCENT_COLOR = "#a259ff"; // Modern purple
 const BG_COLOR = "#181824";
@@ -25,31 +26,19 @@ export default function AdminLogin({ onLogin }) {
     }
     setLoading(true);
     try {
-      // If using a Vite proxy, '/admin/login' will work. Otherwise, use full URL like 'http://localhost:5000/admin/login'
-      const res = await fetch("/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Login failed. Please try again.");
-      } else {
-        setSuccess(true);
-        // Store JWT token in localStorage
-        if (data.token) {
-          localStorage.setItem("adminToken", data.token);
-        }
-        if (onLogin) onLogin(data);
-        // Redirect to admin dashboard after login
-        setTimeout(() => {
-          navigate("/admin/dashboard");
-        }, 800);
+      const data = await apiService.adminLogin(email, password);
+      setSuccess(true);
+      // Store JWT token in localStorage
+      if (data.token) {
+        localStorage.setItem("adminToken", data.token);
       }
+      if (onLogin) onLogin(data);
+      // Redirect to admin dashboard after login
+      setTimeout(() => {
+        navigate("/admin/dashboard");
+      }, 800);
     } catch (err) {
-      setError("Network error. Please try again.");
+      setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }

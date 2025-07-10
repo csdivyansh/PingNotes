@@ -96,8 +96,7 @@ export const getAllFiles = async (req, res) => {
   try {
     const files = await File.find()
       .populate("uploaded_by", "name email role")
-      .populate("linked_subject", "name")
-      .populate("linked_topic", "name");
+      .populate("linked_subject", "name");
     res.json(files);
   } catch (error) {
     console.error("Fetch all files error:", error);
@@ -111,8 +110,7 @@ export const getFileById = async (req, res) => {
   try {
     const file = await File.findById(id)
       .populate("uploaded_by", "name email role")
-      .populate("linked_subject", "name")
-      .populate("linked_topic", "name");
+      .populate("linked_subject", "name");
     if (!file) return res.status(404).json({ message: "File not found" });
     res.json(file);
   } catch (error) {

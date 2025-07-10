@@ -24,7 +24,6 @@ const fileSchema = new mongoose.Schema({
   },
   linked_topic: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "Subject.topics",
     default: null
   },
   created_at: { type: Date, default: Date.now }
