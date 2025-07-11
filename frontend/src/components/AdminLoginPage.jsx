@@ -41,10 +41,7 @@ export default function AdminLoginPage() {
   return (
     <div style={styles.bg}>
       <form style={styles.card} onSubmit={handleSubmit} autoComplete="off">
-        <div style={styles.logoCircle}>
-          <span style={styles.logoText}>PN</span>
-        </div>
-        <h2 style={styles.title}>PingNotes Admin Login</h2>
+        <h2 style={styles.title}>Admin Login</h2>
         <p style={styles.subtitle}>Sign in to access the admin dashboard</p>
         <div style={styles.inputGroup}>
           <label style={styles.label} htmlFor="email">Email</label>
@@ -83,7 +80,6 @@ export default function AdminLoginPage() {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
-        <div style={styles.footerText}>© 2024 PingNotes Admin Portal</div>
       </form>
     </div>
   );
