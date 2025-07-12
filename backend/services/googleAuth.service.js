@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 passport.use('google-user', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/user/callback",
+    callbackURL: process.env.GOOGLE_USER_CALLBACK_URL || "http://localhost:5000/api/auth/google/user/callback",
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file']
   },
   async (accessToken, refreshToken, profile, done) => {
@@ -56,7 +56,7 @@ passport.use('google-user', new GoogleStrategy({
 passport.use('google-teacher', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/teacher/callback",
+    callbackURL: process.env.GOOGLE_TEACHER_CALLBACK_URL || "http://localhost:5000/api/auth/google/teacher/callback",
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file']
   },
   async (accessToken, refreshToken, profile, done) => {
