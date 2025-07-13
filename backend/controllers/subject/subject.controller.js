@@ -1,9 +1,15 @@
 import Subject from "../../models/subject.model.js";
 import File from "../../models/file.model.js";
+import User from "../../models/user.model.js";
+import Teacher from "../../models/teacher.model.js";
 
 export const getAllSubjects = async (req, res) => {
   try {
-    const subjects = await Subject.find().populate('created_by', 'name email');
+    // Filter subjects by the current user
+    const subjects = await Subject.find({
+      created_by: req.user.id,
+      created_by_role: req.user.role
+    });
     res.json(subjects);
   } catch (error) {
     console.error("Error fetching subjects:", error);
@@ -13,9 +19,12 @@ export const getAllSubjects = async (req, res) => {
 
 export const getSubjectById = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
-    const subject = await Subject.findById(id).populate('created_by', 'name email');
+    const subject = await Subject.findById(id).populate(
+      "created_by",
+      "name email"
+    );
     if (!subject) {
       return res.status(404).json({ message: "Subject not found" });
     }
@@ -30,7 +39,9 @@ export const createNewSubject = async (req, res) => {
   const { name, subject_code } = req.body;
 
   if (!name || !subject_code) {
-    return res.status(400).json({ message: "Name and subject_code are required" });
+    return res
+      .status(400)
+      .json({ message: "Name and subject_code are required" });
   }
 
   try {
@@ -43,7 +54,7 @@ export const createNewSubject = async (req, res) => {
       name,
       subject_code,
       created_by: req.user.id,
-      created_by_role: req.user.role
+      created_by_role: req.user.role,
     });
     await subject.save();
 
@@ -66,7 +77,10 @@ export const updateSubject = async (req, res) => {
 
     if (name) subject.name = name;
     if (subject_code) {
-      const existing = await Subject.findOne({ subject_code, _id: { $ne: id } });
+      const existing = await Subject.findOne({
+        subject_code,
+        _id: { $ne: id },
+      });
       if (existing) {
         return res.status(409).json({ message: "Subject code already exists" });
       }
@@ -114,16 +128,20 @@ export const addTopic = async (req, res) => {
     }
 
     // Check if topic name already exists in this subject
-    const existingTopic = subject.topics.find(topic => topic.name === name);
+    const existingTopic = subject.topics.find((topic) => topic.name === name);
     if (existingTopic) {
-      return res.status(409).json({ message: "Topic with this name already exists in this subject" });
+      return res.status(409).json({
+        message: "Topic with this name already exists in this subject",
+      });
     }
 
     subject.topics.push({ name, description });
     await subject.save();
 
     const newTopic = subject.topics[subject.topics.length - 1];
-    res.status(201).json({ message: "Topic added successfully", topic: newTopic });
+    res
+      .status(201)
+      .json({ message: "Topic added successfully", topic: newTopic });
   } catch (error) {
     console.error("Error adding topic:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -228,7 +246,9 @@ export const addFileToTopic = async (req, res) => {
 
     // Check if file is already linked to this topic
     if (topic.files.includes(fileId)) {
-      return res.status(409).json({ message: "File is already linked to this topic" });
+      return res
+        .status(409)
+        .json({ message: "File is already linked to this topic" });
     }
 
     // Add file to topic
@@ -261,7 +281,7 @@ export const removeFileFromTopic = async (req, res) => {
     }
 
     // Remove file from topic
-    topic.files = topic.files.filter(file => file.toString() !== fileId);
+    topic.files = topic.files.filter((file) => file.toString() !== fileId);
     await subject.save();
 
     // Update file's linked_topic to null

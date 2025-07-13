@@ -2,12 +2,6 @@ import { google } from "googleapis";
 import fs from "fs";
 import { refreshGoogleToken } from "./googleAuth.service.js";
 
-// Service account auth (for admin operations)
-const serviceAuth = new google.auth.GoogleAuth({
-  keyFile: "config/drive-service-account.json",
-  scopes: ["https://www.googleapis.com/auth/drive"]
-});
-
 // User-specific auth function
 const getUserAuth = (accessToken) => {
   const auth = new google.auth.OAuth2();
@@ -18,67 +12,53 @@ const getUserAuth = (accessToken) => {
 // Upload to user's Google Drive
 export const uploadToUserDrive = async (file, userAccessToken) => {
   try {
+    console.log("Starting upload to user's Drive:", file.originalname);
+
     const auth = getUserAuth(userAccessToken);
     const drive = google.drive({ version: "v3", auth });
 
-    const fileMetadata = { 
+    const fileMetadata = {
       name: file.originalname,
-      parents: ['root'] // Upload to user's root folder
+      parents: ["root"], // Upload to user's root folder
     };
-    
+
     const media = {
       mimeType: file.mimetype,
-      body: fs.createReadStream(file.path)
+      body: fs.createReadStream(file.path),
     };
+
+    console.log("Creating file in Drive with metadata:", fileMetadata);
 
     const response = await drive.files.create({
       resource: fileMetadata,
       media,
-      fields: "id, webViewLink, webContentLink, name, size"
+      fields: "id, webViewLink, webContentLink, name, size",
     });
+
+    console.log("File created in Drive:", response.data.id);
 
     // Make file accessible to anyone with the link (optional)
     await drive.permissions.create({
       fileId: response.data.id,
       requestBody: {
         role: "reader",
-        type: "anyone"
-      }
+        type: "anyone",
+      },
     });
+
+    console.log("Permissions set for file:", response.data.id);
 
     return response.data;
   } catch (error) {
     console.error("Error uploading to user's Drive:", error);
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      status: error.status,
+      stack: error.stack,
+    });
     throw error;
   }
-};
-
-// Upload to service account Drive (existing functionality)
-export const uploadToDrive = async (file) => {
-  const drive = google.drive({ version: "v3", auth: serviceAuth });
-
-  const fileMetadata = { name: file.originalname };
-  const media = {
-    mimeType: file.mimetype,
-    body: fs.createReadStream(file.path)
-  };
-
-  const response = await drive.files.create({
-    resource: fileMetadata,
-    media,
-    fields: "id, webViewLink, webContentLink"
-  });
-
-  // Public by default
-  await drive.permissions.create({
-    fileId: response.data.id,
-    requestBody: {
-      role: "reader",
-      type: "anyone"
-    }
-  });
-
-  return response.data;
 };
 
 // Delete from user's Drive
@@ -93,23 +73,17 @@ export const deleteFromUserDrive = async (fileId, userAccessToken) => {
   }
 };
 
-// Delete from service account Drive (existing functionality)
-export const deleteFromDrive = async (fileId) => {
-  const drive = google.drive({ version: "v3", auth: serviceAuth });
-  await drive.files.delete({ fileId });
-};
-
 // Get user's Drive files
 export const getUserDriveFiles = async (userAccessToken) => {
   try {
     const auth = getUserAuth(userAccessToken);
     const drive = google.drive({ version: "v3", auth });
-    
+
     const response = await drive.files.list({
       pageSize: 50,
-      fields: "files(id, name, webViewLink, size, createdTime)"
+      fields: "files(id, name, webViewLink, size, createdTime)",
     });
-    
+
     return response.data.files;
   } catch (error) {
     console.error("Error getting user's Drive files:", error);

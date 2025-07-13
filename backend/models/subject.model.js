@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 export const topicSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
-  files: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "File" // References files from File collection
-  }],
-  created_at: { type: Date, default: Date.now }
+  files: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "File", // References files from File collection
+    },
+  ],
+  created_at: { type: Date, default: Date.now },
 });
 
 const subjectSchema = new mongoose.Schema({
@@ -16,15 +18,15 @@ const subjectSchema = new mongoose.Schema({
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: "created_by_role",
-    required: true
+    required: true,
   },
   created_by_role: {
     type: String,
-    enum: ["User", "Teacher"],
-    required: true
+    enum: ["user", "teacher"],
+    required: true,
   },
   topics: [topicSchema], // Each topic now supports linked files
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
 });
 
 const Subject = mongoose.model("Subject", subjectSchema);

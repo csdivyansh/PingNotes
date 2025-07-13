@@ -4,6 +4,7 @@ import { generateToken } from "../services/googleAuth.service.js";
 import User from "../models/user.model.js";
 import Teacher from "../models/teacher.model.js";
 import { OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -71,48 +72,131 @@ router.post("/google/onetap", async (req, res) => {
   }
 });
 
-// Google OAuth for Users
-router.get("/google/user", passport.authenticate("google-user", { scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"] }));
+// Check if user has Google Drive access
+router.get("/google/drive/status", async (req, res) => {
+  try {
+    console.log("Checking Google Drive status for user");
 
-router.get("/google/user/callback", 
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      console.log("No token provided");
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "fallback-jwt-secret-for-development"
+    );
+    console.log("Token decoded:", { userId: decoded.id, role: decoded.role });
+
+    let user;
+
+    if (decoded.role === "user") {
+      user = await User.findById(decoded.id);
+      console.log("User found:", {
+        userId: user?._id,
+        hasAccessToken: !!user?.googleAccessToken,
+      });
+    } else if (decoded.role === "teacher") {
+      user = await Teacher.findById(decoded.id);
+      console.log("Teacher found:", {
+        teacherId: user?._id,
+        hasAccessToken: !!user?.googleAccessToken,
+      });
+    } else {
+      console.log("Invalid role:", decoded.role);
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const hasDriveAccess = !!(
+      user.googleAccessToken && user.googleRefreshToken
+    );
+    console.log("Drive access status:", hasDriveAccess);
+
+    res.json({ hasDriveAccess });
+  } catch (error) {
+    console.error("Drive status check error:", error);
+    res.status(500).json({ message: "Error checking Drive access" });
+  }
+});
+
+// Google OAuth for Users
+router.get(
+  "/google/user",
+  passport.authenticate("google-user", {
+    scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+  })
+);
+
+router.get(
+  "/google/user/callback",
   (req, res, next) => {
     // Log the full request URL and query params
     console.log("[Google User Callback] URL:", req.originalUrl);
     console.log("[Google User Callback] Query:", req.query);
     next();
   },
-  passport.authenticate("google-user", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("google-user", {
+    session: false,
+    failureRedirect: "/login",
+  }),
   (req, res) => {
     try {
       const token = generateToken(req.user, "user");
       // Redirect to frontend with token
-      res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/success?token=${token}&role=user`);
+      res.redirect(
+        `${
+          process.env.FRONTEND_URL || "http://localhost:5173"
+        }/auth/success?token=${token}&role=user`
+      );
     } catch (error) {
       console.error("Google OAuth callback error:", error);
-      res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/error`);
+      res.redirect(
+        `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/error`
+      );
     }
   }
 );
 
 // Google OAuth for Teachers
-router.get("/google/teacher", passport.authenticate("google-teacher", { scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"] }));
+router.get(
+  "/google/teacher",
+  passport.authenticate("google-teacher", {
+    scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+  })
+);
 
-router.get("/google/teacher/callback", 
+router.get(
+  "/google/teacher/callback",
   (req, res, next) => {
     // Log the full request URL and query params
     console.log("[Google Teacher Callback] URL:", req.originalUrl);
     console.log("[Google Teacher Callback] Query:", req.query);
     next();
   },
-  passport.authenticate("google-teacher", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("google-teacher", {
+    session: false,
+    failureRedirect: "/login",
+  }),
   (req, res) => {
     try {
       const token = generateToken(req.user, "teacher");
       // Redirect to frontend with token
-      res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/success?token=${token}&role=teacher`);
+      res.redirect(
+        `${
+          process.env.FRONTEND_URL || "http://localhost:5173"
+        }/auth/success?token=${token}&role=teacher`
+      );
     } catch (error) {
       console.error("Google OAuth callback error:", error);
-      res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/error`);
+      res.redirect(
+        `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/error`
+      );
     }
   }
 );
@@ -122,4 +206,4 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-export default router; 
+export default router;

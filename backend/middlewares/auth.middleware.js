@@ -11,7 +11,9 @@ export const requireAuth = (allowedRoles = []) => {
     const token = authHeader.split(" ")[1];
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const jwtSecret =
+        process.env.JWT_SECRET || "fallback-jwt-secret-for-development";
+      const decoded = jwt.verify(token, jwtSecret);
       req.user = decoded;
 
       if (allowedRoles.length && !allowedRoles.includes(decoded.role)) {
