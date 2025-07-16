@@ -14,7 +14,7 @@ router.post("/", createNewAdmin);
 router.get("/", getAllAdmins);
 router.get("/stats", getDashboardStats);
 router.get("/:id", getAdminById);
-router.delete("/:id", deleteAdmin); 
+router.delete("/:id", deleteAdmin);
 router.put("/:id", updateAdmin);
 
 export default router;

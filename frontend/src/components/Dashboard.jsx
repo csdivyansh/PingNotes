@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminSidebar from "./AdminSidebar";
 import DashboardCard from "./DashboardCard";
 import apiService from "../services/api";
-import "./Dashboard.css"; // Copy your style.css here and rename
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
