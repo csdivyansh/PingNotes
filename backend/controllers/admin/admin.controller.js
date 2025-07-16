@@ -1,6 +1,11 @@
 import Admin from "../../models/admin.model.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import Note from "../../models/note.model.js";
+import User from "../../models/user.model.js";
+import Teacher from "../../models/teacher.model.js";
+import Group from "../../models/group.model.js";
+import Subject from "../../models/subject.model.js";
 dotenv.config();
 
 export const loginAdmin = async (req, res) => {
@@ -125,6 +130,30 @@ export const updateAdmin = async (req, res) => {
     res.json({ message: "Admin updated successfully", admin });
   } catch (error) {
     console.error("Error updating admin:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getDashboardStats = async (req, res) => {
+  try {
+    const [notes, users, teachers, groups, subjects, admins] = await Promise.all([
+      Note.countDocuments(),
+      User.countDocuments({ is_deleted: { $ne: true } }),
+      Teacher.countDocuments({ is_deleted: { $ne: true } }),
+      Group.countDocuments(),
+      Subject.countDocuments(),
+      Admin.countDocuments({ is_deleted: { $ne: true } })
+    ]);
+    res.json({
+      notes,
+      users,
+      teachers,
+      groups,
+      subjects,
+      admins
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

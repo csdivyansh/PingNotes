@@ -130,6 +130,8 @@ router.get(
   "/google/user",
   passport.authenticate("google-user", {
     scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+    accessType: "offline",
+    prompt: "consent",
   })
 );
 
@@ -168,6 +170,8 @@ router.get(
   "/google/teacher",
   passport.authenticate("google-teacher", {
     scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+    accessType: "offline",
+    prompt: "consent",
   })
 );
 

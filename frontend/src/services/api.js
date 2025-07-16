@@ -246,6 +246,11 @@ class ApiService {
       localStorage.getItem("adminToken") || localStorage.getItem("userToken")
     );
   }
+
+  // Admin dashboard stats
+  async getAdminDashboardStats() {
+    return this.request("/api/admin/stats");
+  }
 }
 
 export default new ApiService();

@@ -30,7 +30,6 @@ const UserDashboard = () => {
       const response = await apiService.checkGoogleDriveStatus();
       setNeedsGoogleDriveAuth(!response.hasDriveAccess);
     } catch (error) {
-      console.error("Error checking Google Drive access:", error);
       setNeedsGoogleDriveAuth(true);
     }
   };
@@ -116,7 +115,8 @@ const UserDashboard = () => {
     try {
       // Redirect to Google OAuth for Drive access
       const role = localStorage.getItem("userRole") || "user";
-      const authUrl = `http://localhost:5000/api/auth/google/${role}`;
+      const apiBase = import.meta.env.VITE_API_URL || "";
+      const authUrl = `${apiBase}/api/auth/google/${role}`;
       window.location.href = authUrl;
     } catch (error) {
       console.error("Google Drive auth error:", error);
@@ -168,8 +168,15 @@ const UserDashboard = () => {
         <header className="dashboard-header">
           <h1>My Subjects ({subjects.length})</h1>
           <div style={{ display: "flex", gap: "1rem" }}>
+            <button
+              className="add-subject-btn"
+              onClick={() => setShowAddSubject(true)}
+            >
+              + Add Subject
+            </button>
             {needsGoogleDriveAuth && (
               <button
+                type="button"
                 className="google-drive-auth-btn"
                 onClick={handleGoogleDriveAuth}
                 style={{
@@ -185,12 +192,6 @@ const UserDashboard = () => {
                 🔗 Authorize Google Drive
               </button>
             )}
-            <button
-              className="add-subject-btn"
-              onClick={() => setShowAddSubject(true)}
-            >
-              + Add Subject
-            </button>
           </div>
         </header>
 
