@@ -116,7 +116,7 @@ router.get("/google/drive/status", async (req, res) => {
     const hasDriveAccess = !!(
       user.googleAccessToken && user.googleRefreshToken
     );
-    console.log("Drive access status:", hasDriveAccess);
+    // console.log("Drive access status:", hasDriveAccess);
 
     res.json({ hasDriveAccess });
   } catch (error) {

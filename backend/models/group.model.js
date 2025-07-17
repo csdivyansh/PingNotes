@@ -9,6 +9,18 @@ const groupSchema = new mongoose.Schema({
   },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, default: Date.now },
+  messages: [
+    {
+      sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      text: { type: String },
+      file: { type: mongoose.Schema.Types.ObjectId, ref: "File" },
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
   // settings: { type: Object }, // For future extensibility
 });
 

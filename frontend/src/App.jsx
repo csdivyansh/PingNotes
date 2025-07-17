@@ -8,7 +8,7 @@ import AuthSuccess from "./components/AuthSuccess";
 import About from "./components/About";
 import Features from "./components/features";
 import FAQ from "./components/FAQ";
-import ExplorePage from "./components/Explore";
+import ExplorePage from "./components/ExplorePage";
 import DashboardLayout from "./components/DashboardLayout";
 import MyFiles from "./components/MyFiles";
 import SettingsPage from "./components/SettingsPage";

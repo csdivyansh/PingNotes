@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import apiService from "../services/api.js";
+import Navbar from "./Navbar";
 
 const roles = [
   { label: "Student" },
@@ -132,88 +133,91 @@ export default function RoleSelection() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <h2 style={{ marginBottom: 100, fontSize: 50 }}>You are a......</h2>
-      <div style={{ display: "flex", gap: 32 }}>
-        {roles.map((role) => (
-          <button
-            key={role.label}
-            style={{
-              background: "#000",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              padding: "32px 48px",
-              fontSize: 18,
-              cursor: "pointer",
-            }}
-            onClick={() => handleRoleClick(role.label)}
-          >
-            {role.label}
-          </button>
-        ))}
-      </div>
-      {showModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.4)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              padding: "2rem 2.5rem",
-              borderRadius: 16,
-              boxShadow: "0 4px 32px 0 rgba(0,0,0,0.18)",
-              minWidth: 320,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <h3 style={{ marginBottom: 24 }}>
-              Sign in as {selectedRole} with Google
-            </h3>
-            <div
-              ref={buttonDivRef}
-              id="buttonDiv"
-              style={{ marginBottom: 16 }}
-            ></div>
+    <>
+      <Navbar />
+      <div
+        style={{
+          minHeight: "calc(100vh - 80px)",
+          background: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <h2 style={{ marginBottom: 100, fontSize: 50 }}>You are a......</h2>
+        <div style={{ display: "flex", gap: 32 }}>
+          {roles.map((role) => (
             <button
-              onClick={() => setShowModal(false)}
+              key={role.label}
               style={{
-                background: "#eee",
-                color: "#333",
+                background: "#000",
+                color: "#fff",
                 border: "none",
                 borderRadius: 8,
-                padding: "8px 24px",
-                fontSize: 16,
+                padding: "32px 48px",
+                fontSize: 18,
                 cursor: "pointer",
               }}
+              onClick={() => handleRoleClick(role.label)}
             >
-              Cancel
+              {role.label}
             </button>
-          </div>
+          ))}
         </div>
-      )}
-    </div>
+        {showModal && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              style={{
+                background: "#fff",
+                padding: "2rem 2.5rem",
+                borderRadius: 16,
+                boxShadow: "0 4px 32px 0 rgba(0,0,0,0.18)",
+                minWidth: 320,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <h3 style={{ marginBottom: 24 }}>
+                Sign in as {selectedRole} with Google
+              </h3>
+              <div
+                ref={buttonDivRef}
+                id="buttonDiv"
+                style={{ marginBottom: 16 }}
+              ></div>
+              <button
+                onClick={() => setShowModal(false)}
+                style={{
+                  background: "#eee",
+                  color: "#333",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "8px 24px",
+                  fontSize: 16,
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

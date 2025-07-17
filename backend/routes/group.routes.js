@@ -8,6 +8,8 @@ import {
   getUserGroups,
   getGroupMembers,
   deleteGroup,
+  sendGroupMessage,
+  getGroupMessages,
 } from "../controllers/group/group.controller.js";
 
 const router = express.Router();
@@ -19,5 +21,7 @@ router.post("/remove-member-by-email", removeMemberByEmail);
 router.get("/my-groups", getUserGroups);
 router.get("/:groupId/members", getGroupMembers);
 router.delete("/:groupId", deleteGroup);
+router.post("/:groupId/messages", sendGroupMessage);
+router.get("/:groupId/messages", getGroupMessages);
 
 export default router;

@@ -12,7 +12,7 @@ const getUserAuth = (accessToken) => {
 // Upload to user's Google Drive
 export const uploadToUserDrive = async (file, userAccessToken) => {
   try {
-    console.log("Starting upload to user's Drive:", file.originalname);
+    // console.log("Starting upload to user's Drive:", file.originalname);
 
     const auth = getUserAuth(userAccessToken);
     const drive = google.drive({ version: "v3", auth });
@@ -27,7 +27,7 @@ export const uploadToUserDrive = async (file, userAccessToken) => {
       body: fs.createReadStream(file.path),
     };
 
-    console.log("Creating file in Drive with metadata:", fileMetadata);
+    // console.log("Creating file in Drive with metadata:", fileMetadata);
 
     const response = await drive.files.create({
       resource: fileMetadata,
@@ -35,7 +35,7 @@ export const uploadToUserDrive = async (file, userAccessToken) => {
       fields: "id, webViewLink, webContentLink, name, size",
     });
 
-    console.log("File created in Drive:", response.data.id);
+    // console.log("File created in Drive:", response.data.id);
 
     // Make file accessible to anyone with the link (optional)
     await drive.permissions.create({
@@ -46,7 +46,7 @@ export const uploadToUserDrive = async (file, userAccessToken) => {
       },
     });
 
-    console.log("Permissions set for file:", response.data.id);
+    // console.log("Permissions set for file:", response.data.id);
 
     return response.data;
   } catch (error) {
