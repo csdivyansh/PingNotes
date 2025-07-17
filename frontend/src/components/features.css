@@ -2,13 +2,14 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-} 
+}
 
 .features-page {
   padding: 40px 20px;
-  background-color: #f4f6f8;
+  background: linear-gradient(135deg, #f0f4ff, #f9fcff);
+  linear-gradient(135deg, #f0f4ff, #f9fcff);
   min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .features-header {

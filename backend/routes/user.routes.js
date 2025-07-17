@@ -14,11 +14,13 @@ const router = express.Router();
 // Public route
 router.post("/login", loginUser);
 
-// Protected routes
-router.use(requireAuth(["user"]));
-
+// Admin-only routes
+router.use("/", requireAuth(["admin"]));
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
+
+// User-protected routes
+router.use(requireAuth(["user"]));
 router.post("/", createNewUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);

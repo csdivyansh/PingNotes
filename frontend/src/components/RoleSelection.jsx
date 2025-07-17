@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import apiService from "../services/api.js";
 import Navbar from "./Navbar";
+import Footer from "./Footer.jsx";
 
 const roles = [
   { label: "Student" },
@@ -137,7 +138,7 @@ export default function RoleSelection() {
       <Navbar />
       <div
         style={{
-          minHeight: "calc(100vh - 80px)",
+          minHeight: "85vh",
           background: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -145,7 +146,7 @@ export default function RoleSelection() {
           justifyContent: "center",
         }}
       >
-        <h2 style={{ marginBottom: 100, fontSize: 50 }}>You are a......</h2>
+        <h2 style={{ marginBottom: 100, fontSize: 70 }}>You are a......</h2>
         <div style={{ display: "flex", gap: 32 }}>
           {roles.map((role) => (
             <button
@@ -218,6 +219,16 @@ export default function RoleSelection() {
           </div>
         )}
       </div>
+      <Footer className="fixed-footer" />
+      <style>{`
+        .fixed-footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          z-index: 100;
+        }
+      `}</style>
     </>
   );
 }

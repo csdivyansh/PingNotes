@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "./About.css";
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 const About = () => {
@@ -12,6 +13,7 @@ const About = () => {
   return (
     <>
       <Navbar />
+
       <div className="about-page">
         {/* About Header - Project Info */}
         <div className="about-header" data-aos="fade-down">
@@ -20,6 +22,61 @@ const About = () => {
             Pingnotes is a digital platform built to help students and teachers
             collaborate, share notes, and manage academic resources efficiently.
           </p>
+        </div>
+        <div className="developer-section">
+          <h2>Developed By</h2>
+          <div className="developer-cards">
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
+                style={{ backgroundColor: "#004aad" }}
+              >
+                GP
+              </div>
+              <h3>Garv Pathak</h3>
+              <p>Frontend Developer</p>
+            </div>
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
+                style={{ backgroundColor: "#007bff" }}
+              >
+                AK
+              </div>
+              <h3>Amit Kumar</h3>
+              <p>Frontend Developer</p>
+            </div>
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
+                style={{ backgroundColor: "#0056b3" }}
+              >
+                GC
+              </div>
+              <h3>Gaurav Chaudhary</h3>
+              <p>Database Specialist</p>
+            </div>
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
+                style={{ backgroundColor: "#003d80" }}
+              >
+                DV
+              </div>
+              <h3>Divyansh Varshney</h3>
+              <p>Backend, API & Devops </p>
+            </div>
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
+                style={{ backgroundColor: "#00264d" }}
+              >
+                HB
+              </div>
+              <h3>Hardeep Beniwal</h3>
+              <p>Backend Developer</p>
+            </div>
+          </div>
         </div>
 
         {/* About Features Section */}
@@ -41,67 +98,13 @@ const About = () => {
         </div>
 
         {/* Developed By Section */}
-        <div className="developer-section" data-aos="fade-up">
-          <h2>Developed By</h2>
-          <div className="developer-cards">
-            <div className="dev-card" data-aos="zoom-in">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#004aad" }}
-              >
-                GP
-              </div>
-              <h3>Garv Pathak</h3>
-              <p>Frontend Developer</p>
-            </div>
-            <div className="dev-card" data-aos="zoom-in" data-aos-delay="100">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#007bff" }}
-              >
-                AK
-              </div>
-              <h3>Amit Kumar</h3>
-              <p>Frontend Developer</p>
-            </div>
-            <div className="dev-card" data-aos="zoom-in" data-aos-delay="200">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#0056b3" }}
-              >
-                GC
-              </div>
-              <h3>Gaurav Chaudhary</h3>
-              <p>Database Specialist</p>
-            </div>
-            <div className="dev-card" data-aos="zoom-in" data-aos-delay="300">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#003d80" }}
-              >
-                DV
-              </div>
-              <h3>Divyansh Varshney</h3>
-              <p>Backend Developer</p>
-            </div>
-            <div className="dev-card" data-aos="zoom-in" data-aos-delay="400">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#00264d" }}
-              >
-                HB
-              </div>
-              <h3>Hardeep Beniwal</h3>
-              <p>Backend Developer</p>
-            </div>
-          </div>
-        </div>
 
         {/* Footer */}
         <div className="about-footer" data-aos="fade-in">
           <p>🚀 Built with ❤ for modern education.</p>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

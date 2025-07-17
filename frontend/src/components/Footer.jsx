@@ -1,3 +1,3 @@
-export default function Footer() {
-  return <footer>© Pingnotes 2025</footer>;
+export default function Footer({ className = "" }) {
+  return <footer className={className}>© Pingnotes 2025</footer>;
 }

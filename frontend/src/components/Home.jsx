@@ -119,7 +119,16 @@ const Home = () => {
           </Link>
         </section>
       </div>
-      <Footer />
+      <Footer className="fixed-footer" />
+      <style>{`
+        .fixed-footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          z-index: 100;
+        }
+      `}</style>
     </>
   );
 };

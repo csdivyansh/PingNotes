@@ -116,11 +116,6 @@ const FAQ = () => {
     <>
       <Navbar />
       <div className="faq-container">
-        <h1 className="faq-title">PingNotes</h1>
-        <p className="faq-subtitle">
-          Your smart companion for storing, syncing, and sharing notes — built
-          for every student.
-        </p>
         <div className="faq-list">
           {faqs.map((faq, index) => (
             <div key={index} className="faq-item">

@@ -2,7 +2,7 @@
   padding: 50px 20px;
   background: linear-gradient(135deg, #f0f4ff, #f9fcff);
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Header Section */
@@ -80,10 +80,10 @@
 
 .developer-cards {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 30px;
-  max-width: 900px;
+  gap: 40px;
+  min-width: 500px;
   margin: 0 auto;
 }
 
@@ -92,8 +92,7 @@
   border-radius: 20px;
   width: 220px;
   padding: 30px 25px;
-  box-shadow:
-    6px 6px 10px rgba(163, 177, 198, 0.6),
+  box-shadow: 6px 6px 10px rgba(163, 177, 198, 0.6),
     -6px -6px 10px rgba(255, 255, 255, 0.8);
   transition: all 0.4s ease;
   cursor: pointer;
@@ -103,8 +102,7 @@
 
 .dev-card:hover {
   transform: translateY(-10px) scale(1.05);
-  box-shadow:
-    8px 8px 20px rgba(0, 191, 255, 0.4),
+  box-shadow: 8px 8px 20px rgba(0, 191, 255, 0.4),
     -8px -8px 20px rgba(255, 255, 255, 0.9);
 }
 
@@ -139,7 +137,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   user-select: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: default;
@@ -167,7 +165,9 @@
 
 @media (max-width: 600px) {
   .developer-cards {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 20px;
   }
 }

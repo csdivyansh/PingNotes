@@ -3,7 +3,7 @@ import UserSidebar from "./UserSidebar.jsx";
 import apiService from "../services/api.js";
 import "./UserDashboard.css";
 import { useNavigate, Link } from "react-router-dom";
-import { FaDownload, FaTrash } from "react-icons/fa";
+import { FaDownload, FaTrash, FaPaperclip } from "react-icons/fa";
 
 const UserDashboard = () => {
   const [subjects, setSubjects] = useState([]);
@@ -197,7 +197,7 @@ const UserDashboard = () => {
       <main className="dashboard-main2">
         <header className="dashboard-header">
           <h1>My Subjects ({subjects.length})</h1>
-          <div style={{ display: "flex"}}>
+          <div style={{ display: "flex" }}>
             <button
               className="add-subject-btn"
               onClick={() => setShowAddSubject(true)}
@@ -302,8 +302,15 @@ const UserDashboard = () => {
                           </div>
                           <button
                             className="btn-danger"
-                            style={{ marginBottom: 8, float: 'right', display: 'inline-flex', alignItems: 'center' }}
-                            onClick={() => handleDeleteTopic(subject._id, topic._id)}
+                            style={{
+                              marginBottom: 8,
+                              float: "right",
+                              display: "inline-flex",
+                              alignItems: "center",
+                            }}
+                            onClick={() =>
+                              handleDeleteTopic(subject._id, topic._id)
+                            }
                             title="Delete Topic"
                           >
                             <FaTrash />
@@ -311,14 +318,29 @@ const UserDashboard = () => {
 
                           <div className="topic-actions">
                             <button
-                              className="upload-file-btn"
+                              className="upload-file-icon-btn"
+                              title="Upload File"
+                              style={{
+                                background: "#e0e7ef",
+                                border: "none",
+                                borderRadius: "50%",
+                                width: 36,
+                                height: 36,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                marginRight: 8,
+                                fontSize: 18,
+                                transition: "background 0.2s",
+                              }}
                               onClick={() => {
                                 setSelectedSubject(subject);
                                 setSelectedTopic(topic);
                                 setShowUploadFile(true);
                               }}
                             >
-                              Upload File
+                              <FaPaperclip />
                             </button>
 
                             {topic.files && topic.files.length > 0 && (
