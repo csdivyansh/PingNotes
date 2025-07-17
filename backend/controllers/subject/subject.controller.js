@@ -16,7 +16,7 @@ export const getAllSubjects = async (req, res) => {
     for (const subject of subjects) {
       for (const topic of subject.topics) {
         if (topic.files && topic.files.length > 0) {
-          topic.files = await File.find({ _id: { $in: topic.files } });
+          topic.files = await File.find({ _id: { $in: topic.files }, is_deleted: false });
         }
       }
     }

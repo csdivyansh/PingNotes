@@ -11,6 +11,8 @@ import FAQ from "./components/FAQ";
 import ExplorePage from "./components/Explore";
 import DashboardLayout from "./components/DashboardLayout";
 import MyFiles from "./components/MyFiles";
+import SettingsPage from "./components/SettingsPage";
+import TrashPage from "./components/TrashPage";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<UserDashboard />} />
           <Route path="files" element={<MyFiles />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="trash" element={<TrashPage />} />
         </Route>
         <Route path="/login" element={<RoleSelection />} />
         <Route path="/auth/success" element={<AuthSuccess />} />

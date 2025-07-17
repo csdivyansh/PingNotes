@@ -43,8 +43,13 @@ const MyFiles = () => {
   };
 
   return (
-    <div style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
-      <h1>My Files</h1>
+    <div
+      className="subject-card"
+      style={{ maxWidth: 900, margin: "2rem auto" }}
+    >
+      <div className="subject-header" style={{ marginBottom: 32 }}>
+        <h1 style={{ fontSize: "2rem", margin: 0 }}>My Files</h1>
+      </div>
       {loading ? (
         <div>Loading files...</div>
       ) : error ? (
@@ -52,53 +57,38 @@ const MyFiles = () => {
       ) : files.length === 0 ? (
         <div>No files uploaded yet.</div>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left", padding: 8 }}>File Name</th>
-              <th style={{ textAlign: "left", padding: 8 }}>Type</th>
-              <th style={{ textAlign: "left", padding: 8 }}>Size</th>
-              <th style={{ textAlign: "left", padding: 8 }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {files.map((file) => (
-              <tr key={file._id} style={{ borderBottom: "1px solid #eee" }}>
-                <td style={{ padding: 8 }}>{file.name}</td>
-                <td style={{ padding: 8 }}>{file.mimetype}</td>
-                <td style={{ padding: 8 }}>
-                  {(file.size / 1024).toFixed(1)} KB
-                </td>
-                <td style={{ padding: 8 }}>
-                  <a
-                    href={file.drive_file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                    style={{ marginRight: 16 }}
-                  >
-                    <FaDownload />
-                  </a>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    disabled={deletingId === file._id}
-                    style={{
-                      color: "white",
-                      background: "#ef4444",
-                      border: "none",
-                      borderRadius: 4,
-                      padding: "4px 12px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {deletingId === file._id ? "" : <FaTrash />}{" "}
-                    {deletingId === file._id ? "Deleting..." : ""}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="files-list" style={{ flexDirection: "column" }}>
+          {files.map((file) => (
+            <div key={file._id} className="file-item">
+              <span className="file-name">{file.name}</span>
+              <span style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}>
+                {file.mimetype}
+              </span>
+              <span style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}>
+                {(file.size / 1024).toFixed(1)} KB
+              </span>
+              <a
+                href={file.drive_file_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="view-file-btn"
+                style={{ marginRight: 8 }}
+              >
+                <FaDownload />
+              </a>
+              <button
+                onClick={() => handleDelete(file._id)}
+                disabled={deletingId === file._id}
+                className="btn-danger"
+                style={{ minWidth: 36, minHeight: 36 }}
+              >
+                {deletingId === file._id ? "" : <FaTrash />}{" "}
+                {deletingId === file._id ? "Deleting..." : ""}
+              </button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

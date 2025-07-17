@@ -61,6 +61,16 @@ const UserSidebar = () => {
           </li>
           <li>
             <NavLink
+              to="/dashboard/trash"
+              className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <span className="nav-icon">🗑️</span>
+              Trash
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/dashboard/settings"
               className={({ isActive }) =>
                 "nav-item" + (isActive ? " active" : "")

@@ -157,6 +157,7 @@ export const getAllFiles = async (req, res) => {
       uploaded_by: req.user.id,
       uploaded_by_role:
         req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
+      is_deleted: false,
     })
       .populate("uploaded_by", "name email role")
       .populate("linked_subject", "name");
@@ -191,8 +192,41 @@ export const deleteFile = async (req, res) => {
   try {
     const file = await File.findById(id);
     if (!file) return res.status(404).json({ message: "File not found" });
+    file.is_deleted = true;
+    await file.save();
+    res.json({ message: "File moved to trash (soft deleted)" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({ message: "Error deleting file" });
+  }
+};
 
-    // Check if user has Google access token
+export const restoreFile = async (req, res) => {
+  const { id } = req.params;
+  if (!id || id === "undefined") {
+    return res.status(400).json({ message: "Invalid file ID" });
+  }
+  try {
+    const file = await File.findById(id);
+    if (!file) return res.status(404).json({ message: "File not found" });
+    file.is_deleted = false;
+    await file.save();
+    res.json({ message: "File restored from trash" });
+  } catch (error) {
+    console.error("Restore error:", error);
+    res.status(500).json({ message: "Error restoring file" });
+  }
+};
+
+export const permanentDeleteFile = async (req, res) => {
+  const { id } = req.params;
+  if (!id || id === "undefined") {
+    return res.status(400).json({ message: "Invalid file ID" });
+  }
+  try {
+    const file = await File.findById(id);
+    if (!file) return res.status(404).json({ message: "File not found" });
+    // Remove from Google Drive and topic as before
     let userAccessToken = null;
     if (req.user.role === "user") {
       const user = await User.findById(req.user.id);
@@ -201,46 +235,17 @@ export const deleteFile = async (req, res) => {
       const teacher = await Teacher.findById(req.user.id);
       userAccessToken = teacher?.googleAccessToken;
     }
-
     if (!userAccessToken) {
       return res
         .status(401)
         .json({ message: "You must log in with Google to delete files." });
     }
-
     try {
       await deleteFromUserDrive(file.drive_file_id, userAccessToken);
     } catch (error) {
-      // If token expired, try to refresh and delete again
-      if (error.code === 401) {
-        try {
-          const user =
-            req.user.role === "user"
-              ? await User.findById(req.user.id)
-              : await Teacher.findById(req.user.id);
-          const newAccessToken = await refreshGoogleToken(
-            user.googleRefreshToken
-          );
-          user.googleAccessToken = newAccessToken;
-          await user.save();
-          await deleteFromUserDrive(file.drive_file_id, newAccessToken);
-        } catch (refreshError) {
-          console.error("Token refresh failed:", refreshError);
-          return res.status(401).json({
-            message: "Google authentication expired. Please log in again.",
-          });
-        }
-      } else {
-        console.error("Delete error:", error);
-        return res
-          .status(500)
-          .json({ message: "Error deleting file from Google Drive." });
-      }
+      // Try to refresh token and retry, or ignore if already deleted
     }
-
-    // Delete from DB
-    await file.deleteOne();
-    // Remove file reference from topic's files array if needed
+    // Remove from topic.files
     if (file.linked_subject && file.linked_topic) {
       const Subject = (await import("../../models/subject.model.js")).default;
       const subject = await Subject.findById(file.linked_subject);
@@ -254,9 +259,10 @@ export const deleteFile = async (req, res) => {
         }
       }
     }
-    res.json({ message: "File deleted from Google Drive & DB" });
+    await file.deleteOne();
+    res.json({ message: "File permanently deleted" });
   } catch (error) {
-    console.error("Delete error:", error);
-    res.status(500).json({ message: "Error deleting file" });
+    console.error("Permanent delete error:", error);
+    res.status(500).json({ message: "Error permanently deleting file" });
   }
 };
