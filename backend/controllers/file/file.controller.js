@@ -106,6 +106,19 @@ export const uploadFiles = async (req, res) => {
         });
         await newFile.save();
         console.log("File saved to database:", newFile._id);
+        // Link file to topic's files array if subject and topic are provided
+        if (req.body.subject_id && req.body.topic_id) {
+          const Subject = (await import("../../models/subject.model.js"))
+            .default;
+          const subject = await Subject.findById(req.body.subject_id);
+          if (subject) {
+            const topic = subject.topics.id(req.body.topic_id);
+            if (topic) {
+              topic.files.push(newFile._id);
+              await subject.save();
+            }
+          }
+        }
         savedFiles.push(newFile);
       } catch (dbError) {
         console.error("Database save error:", dbError);
