@@ -13,7 +13,7 @@ const router = express.Router();
 // ✅ All routes require authentication
 router.use(requireAuth(["admin", "teacher", "user"]));
 
-router.post("/", createNote); 
+router.post("/", createNote);
 router.get("/", getAllNotes);
 router.get("/:id", getNoteById);
 router.put("/:id", updateNote);

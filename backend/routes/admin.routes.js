@@ -1,12 +1,19 @@
 import express from "express";
 import { requireAuth } from "../middlewares/auth.middleware.js";
-import { getAllAdmins, createNewAdmin, deleteAdmin, updateAdmin, getAdminById, loginAdmin, getDashboardStats } from "../controllers/admin/admin.controller.js";
+import {
+  getAllAdmins,
+  createNewAdmin,
+  deleteAdmin,
+  updateAdmin,
+  getAdminById,
+  loginAdmin,
+  getDashboardStats,
+} from "../controllers/admin/admin.controller.js";
 
 const router = express.Router();
 
 // 🔓 Public route
 router.post("/login", loginAdmin);
-
 
 // 🔐 Protected routes
 router.use(requireAuth(["admin"]));

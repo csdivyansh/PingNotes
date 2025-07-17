@@ -83,7 +83,7 @@ const SettingsPage = () => {
         <h1 style={{ fontSize: "2rem", margin: 0 }}>Settings</h1>
       </div>
       <div style={{ marginBottom: 24, fontWeight: 600, color: "#374151" }}>
-        Current Name: <span style={{ color: "#3b82f6" }}>{currentName}</span>
+        Current Name: {}<span style={{ color: "#3b82f6" }}>{currentName}</span>
       </div>
       <button
         className="btn-danger"

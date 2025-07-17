@@ -9,7 +9,6 @@ import {
 } from "../controllers/teacher/teacher.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 
-
 const router = express.Router();
 
 // Public

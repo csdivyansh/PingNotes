@@ -8,6 +8,7 @@ import {
   deleteFile,
   restoreFile,
   permanentDeleteFile,
+  getFilesSharedWithGroup,
 } from "../controllers/file/file.controller.js";
 
 const router = express.Router();
@@ -38,5 +39,6 @@ router.post("/restore/:id", restoreFile);
 router.delete("/permanent/:id", permanentDeleteFile);
 router.get("/:id", getFileById);
 router.delete("/:id", deleteFile);
+router.get("/shared/group/:groupId", getFilesSharedWithGroup);
 
 export default router;

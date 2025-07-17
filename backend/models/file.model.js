@@ -27,6 +27,7 @@ const fileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     default: null,
   },
+  shared_with_groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
   created_at: { type: Date, default: Date.now },
 });
 

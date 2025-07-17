@@ -103,6 +103,7 @@ export const uploadFiles = async (req, res) => {
             req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
           linked_subject: req.body.subject_id || null,
           linked_topic: req.body.topic_id || null,
+          shared_with_groups: req.body.shared_with_groups || [],
         });
         await newFile.save();
         console.log("File saved to database:", newFile._id);
@@ -264,5 +265,22 @@ export const permanentDeleteFile = async (req, res) => {
   } catch (error) {
     console.error("Permanent delete error:", error);
     res.status(500).json({ message: "Error permanently deleting file" });
+  }
+};
+
+// List all files shared in a group
+export const getFilesSharedWithGroup = async (req, res) => {
+  const { groupId } = req.params;
+  try {
+    const files = await File.find({
+      shared_with_groups: groupId,
+      is_deleted: false,
+    })
+      .populate("uploaded_by", "name email role")
+      .populate("linked_subject", "name");
+    res.json(files);
+  } catch (error) {
+    console.error("Fetch files shared with group error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -194,10 +194,10 @@ const UserDashboard = () => {
   return (
     <div className="user-dashboard">
       <UserSidebar />
-      <main className="dashboard-main">
+      <main className="dashboard-main2">
         <header className="dashboard-header">
           <h1>My Subjects ({subjects.length})</h1>
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex"}}>
             <button
               className="add-subject-btn"
               onClick={() => setShowAddSubject(true)}

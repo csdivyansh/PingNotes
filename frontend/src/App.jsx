@@ -13,6 +13,8 @@ import DashboardLayout from "./components/DashboardLayout";
 import MyFiles from "./components/MyFiles";
 import SettingsPage from "./components/SettingsPage";
 import TrashPage from "./components/TrashPage";
+import MyGroups from "./components/MyGroups";
+import GroupDetail from "./components/GroupDetail";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<UserDashboard />} />
           <Route path="files" element={<MyFiles />} />
+          <Route path="groups" element={<MyGroups />} />
+          <Route path="groups/:groupId" element={<GroupDetail />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="trash" element={<TrashPage />} />
         </Route>

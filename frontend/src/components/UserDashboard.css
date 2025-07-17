@@ -5,10 +5,15 @@
   background-color: #f8fafc;
 }
 
+.dashboard-main2{
+  flex: 1;
+  padding: 1rem; /* Increased to account for wider sidebar and more space */
+}
+
 .dashboard-main {
   flex: 1;
   padding: 2rem;
-  margin-left: 120px; /* Increased to account for wider sidebar and more space */
+  margin-left: 250px; /* Increased to account for wider sidebar and more space */
 }
 
 .dashboard-header {
