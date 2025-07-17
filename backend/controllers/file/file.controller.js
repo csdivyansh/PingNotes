@@ -185,6 +185,9 @@ export const getFileById = async (req, res) => {
 // Delete file
 export const deleteFile = async (req, res) => {
   const { id } = req.params;
+  if (!id || id === "undefined") {
+    return res.status(400).json({ message: "Invalid file ID" });
+  }
   try {
     const file = await File.findById(id);
     if (!file) return res.status(404).json({ message: "File not found" });

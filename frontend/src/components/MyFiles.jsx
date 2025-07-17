@@ -26,6 +26,10 @@ const MyFiles = () => {
   };
 
   const handleDelete = async (fileId) => {
+    if (!fileId) {
+      alert("Invalid file ID");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this file?")) return;
     setDeletingId(fileId);
     try {

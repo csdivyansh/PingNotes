@@ -204,7 +204,7 @@ class ApiService {
       });
 
       xhr.addEventListener("load", () => {
-        if (xhr.status === 200) {
+        if (xhr.status === 200 || xhr.status === 201) {
           try {
             const response = JSON.parse(xhr.responseText);
             resolve(response);

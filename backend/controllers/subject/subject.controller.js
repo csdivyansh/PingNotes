@@ -6,10 +6,21 @@ import Teacher from "../../models/teacher.model.js";
 export const getAllSubjects = async (req, res) => {
   try {
     // Filter subjects by the current user
-    const subjects = await Subject.find({
+    let subjects = await Subject.find({
       created_by: req.user.id,
-      created_by_role: req.user.role
-    });
+      created_by_role: req.user.role,
+    }).lean();
+
+    // Populate files in each topic
+    const File = (await import("../../models/file.model.js")).default;
+    for (const subject of subjects) {
+      for (const topic of subject.topics) {
+        if (topic.files && topic.files.length > 0) {
+          topic.files = await File.find({ _id: { $in: topic.files } });
+        }
+      }
+    }
+
     res.json(subjects);
   } catch (error) {
     console.error("Error fetching subjects:", error);
@@ -204,12 +215,8 @@ export const deleteTopic = async (req, res) => {
       return res.status(404).json({ message: "Subject not found" });
     }
 
-    const topic = subject.topics.id(topicId);
-    if (!topic) {
-      return res.status(404).json({ message: "Topic not found" });
-    }
-
-    topic.remove();
+    // Remove the topic from the array
+    subject.topics = subject.topics.filter((t) => t._id.toString() !== topicId);
     await subject.save();
 
     res.json({ message: "Topic deleted successfully" });

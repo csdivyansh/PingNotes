@@ -148,12 +148,30 @@ const UserDashboard = () => {
   };
 
   const handleDeleteFile = async (fileId) => {
+    if (!fileId) {
+      alert("Invalid file ID");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this file?")) return;
     try {
       await apiService.request(`/api/files/${fileId}`, { method: "DELETE" });
       fetchSubjects();
     } catch (err) {
       alert("Failed to delete file");
+    }
+  };
+
+  const handleDeleteTopic = async (subjectId, topicId) => {
+    if (!topicId || !subjectId) {
+      alert("Invalid topic or subject ID");
+      return;
+    }
+    if (!window.confirm("Are you sure you want to delete this topic?")) return;
+    try {
+      await apiService.deleteTopic(subjectId, topicId);
+      fetchSubjects();
+    } catch (err) {
+      alert("Failed to delete topic");
     }
   };
 
@@ -282,6 +300,14 @@ const UserDashboard = () => {
                               </p>
                             )}
                           </div>
+                          <button
+                            className="btn-danger"
+                            style={{ marginBottom: 8, float: 'right', display: 'inline-flex', alignItems: 'center' }}
+                            onClick={() => handleDeleteTopic(subject._id, topic._id)}
+                            title="Delete Topic"
+                          >
+                            <FaTrash />
+                          </button>
 
                           <div className="topic-actions">
                             <button
@@ -298,7 +324,10 @@ const UserDashboard = () => {
                             {topic.files && topic.files.length > 0 && (
                               <div className="files-list">
                                 {topic.files.map((file, fileIdx) => (
-                                  <div key={file._id || fileIdx} className="file-item">
+                                  <div
+                                    key={file._id || fileIdx}
+                                    className="file-item"
+                                  >
                                     <span className="file-name">
                                       {file.name}
                                     </span>

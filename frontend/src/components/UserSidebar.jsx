@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import "./UserSidebar.css";
 
 const UserSidebar = () => {
@@ -22,26 +22,54 @@ const UserSidebar = () => {
 
       <nav className="sidebar-nav">
         <ul>
-          <li className="nav-item active">
-            <span className="nav-icon">📚</span>
-            <span>My Subjects</span>
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                "nav-item" + (isActive ? " active" : "")
+              }
+              style={{ color: "inherit", textDecoration: "none" }}
+              end
+            >
+              <span className="nav-icon">📚</span>
+              My Subjects
+            </NavLink>
           </li>
-          <li className="nav-item">
-            <span className="nav-icon">📁</span>
-            <Link
-              to="/my-files"
+          <li>
+            <NavLink
+              to="/dashboard/files"
+              className={({ isActive }) =>
+                "nav-item" + (isActive ? " active" : "")
+              }
               style={{ color: "inherit", textDecoration: "none" }}
             >
+              <span className="nav-icon">📁</span>
               My Files
-            </Link>
+            </NavLink>
           </li>
-          <li className="nav-item">
-            <span className="nav-icon">👥</span>
-            <span>My Groups</span>
+          <li>
+            <NavLink
+              to="/dashboard/groups"
+              className={({ isActive }) =>
+                "nav-item" + (isActive ? " active" : "")
+              }
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <span className="nav-icon">👥</span>
+              My Groups
+            </NavLink>
           </li>
-          <li className="nav-item">
-            <span className="nav-icon">⚙️</span>
-            <span>Settings</span>
+          <li>
+            <NavLink
+              to="/dashboard/settings"
+              className={({ isActive }) =>
+                "nav-item" + (isActive ? " active" : "")
+              }
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <span className="nav-icon">⚙️</span>
+              Settings
+            </NavLink>
           </li>
         </ul>
       </nav>
