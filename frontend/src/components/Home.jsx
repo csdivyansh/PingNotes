@@ -41,7 +41,7 @@ const Home = () => {
         <div style={{ fontSize: 22, color: '#222', margin: '32px auto 0 auto', maxWidth: 700, fontWeight: 400 }}>
           Organise, search, and access your notes with ease. PingNotes helps you keep your study and work materials structured, accessible, and always at your fingertips.
         </div>
-        <a href="#explore" style={{ display: 'inline-block', marginTop: 40, background: '#0078FF', color: '#fff', padding: '16px 48px', borderRadius: 12, fontWeight: 700, fontSize: 22, textDecoration: 'none', boxShadow: '0 4px 16px rgba(0,120,255,0.10)' }}>Explore </a>
+        <Link to="/explore" style={{ display: 'inline-block', marginTop: 40, background: '#0078FF', color: '#fff', padding: '16px 48px', borderRadius: 12, fontWeight: 700, fontSize: 22, textDecoration: 'none', boxShadow: '0 4px 16px rgba(0,120,255,0.10)' }}>Explore</Link>
       </section>
     </div>
   );

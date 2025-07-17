@@ -99,7 +99,8 @@ export const uploadFiles = async (req, res) => {
           drive_file_id: driveFile.id,
           drive_file_url: driveFile.webViewLink,
           uploaded_by: req.user.id,
-          uploaded_by_role: req.user.role,
+          uploaded_by_role:
+            req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
           linked_subject: req.body.subject_id || null,
           linked_topic: req.body.topic_id || null,
         });
