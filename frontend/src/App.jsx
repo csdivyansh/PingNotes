@@ -9,6 +9,7 @@ import About from "./components/About";
 import Features from "./components/features";
 import FAQ from "./components/FAQ";
 import ExplorePage from "./components/Explore";
+import MyFiles from "./components/MyFiles";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/features" element={<Features />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/explore" element={<ExplorePage />} />
+        <Route path="/my-files" element={<MyFiles />} />
       </Routes>
     </Router>
   );

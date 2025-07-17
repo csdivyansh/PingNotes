@@ -97,7 +97,7 @@ export const uploadFiles = async (req, res) => {
           mimetype: file.mimetype,
           size: file.size,
           drive_file_id: driveFile.id,
-          drive_file_url: driveFile.webViewLink,
+          drive_file_url: driveFile.webContentLink, // Use direct download link
           uploaded_by: req.user.id,
           uploaded_by_role:
             req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
@@ -153,7 +153,11 @@ export const uploadFiles = async (req, res) => {
 // Get all files
 export const getAllFiles = async (req, res) => {
   try {
-    const files = await File.find()
+    const files = await File.find({
+      uploaded_by: req.user.id,
+      uploaded_by_role:
+        req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
+    })
       .populate("uploaded_by", "name email role")
       .populate("linked_subject", "name");
     res.json(files);
@@ -233,6 +237,20 @@ export const deleteFile = async (req, res) => {
 
     // Delete from DB
     await file.deleteOne();
+    // Remove file reference from topic's files array if needed
+    if (file.linked_subject && file.linked_topic) {
+      const Subject = (await import("../../models/subject.model.js")).default;
+      const subject = await Subject.findById(file.linked_subject);
+      if (subject) {
+        const topic = subject.topics.id(file.linked_topic);
+        if (topic) {
+          topic.files = topic.files.filter(
+            (fId) => fId.toString() !== file._id.toString()
+          );
+          await subject.save();
+        }
+      }
+    }
     res.json({ message: "File deleted from Google Drive & DB" });
   } catch (error) {
     console.error("Delete error:", error);

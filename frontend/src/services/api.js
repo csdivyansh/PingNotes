@@ -228,6 +228,10 @@ class ApiService {
     });
   }
 
+  async getMyFiles() {
+    return this.request("/api/files");
+  }
+
   // Check if user has Google Drive access
   async checkGoogleDriveStatus() {
     return this.request("/api/auth/google/drive/status");

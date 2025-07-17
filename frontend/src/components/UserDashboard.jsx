@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import UserSidebar from "./UserSidebar.jsx";
 import apiService from "../services/api.js";
 import "./UserDashboard.css";
+import { useNavigate, Link } from "react-router-dom";
+import { FaDownload, FaTrash } from "react-icons/fa";
 
 const UserDashboard = () => {
   const [subjects, setSubjects] = useState([]);
@@ -145,6 +147,16 @@ const UserDashboard = () => {
     }
   };
 
+  const handleDeleteFile = async (fileId) => {
+    if (!window.confirm("Are you sure you want to delete this file?")) return;
+    try {
+      await apiService.request(`/api/files/${fileId}`, { method: "DELETE" });
+      fetchSubjects();
+    } catch (err) {
+      alert("Failed to delete file");
+    }
+  };
+
   if (loading) {
     return (
       <div className="user-dashboard">
@@ -285,8 +297,8 @@ const UserDashboard = () => {
 
                             {topic.files && topic.files.length > 0 && (
                               <div className="files-list">
-                                {topic.files.map((file) => (
-                                  <div key={file._id} className="file-item">
+                                {topic.files.map((file, fileIdx) => (
+                                  <div key={file._id || fileIdx} className="file-item">
                                     <span className="file-name">
                                       {file.name}
                                     </span>
@@ -294,10 +306,27 @@ const UserDashboard = () => {
                                       href={file.drive_file_url}
                                       target="_blank"
                                       rel="noopener noreferrer"
+                                      download
                                       className="view-file-btn"
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        marginRight: 8,
+                                      }}
                                     >
-                                      View
+                                      <FaDownload />
                                     </a>
+                                    <button
+                                      onClick={() => handleDeleteFile(file._id)}
+                                      className="btn-danger"
+                                      style={{
+                                        marginLeft: 8,
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <FaTrash />
+                                    </button>
                                   </div>
                                 ))}
                               </div>

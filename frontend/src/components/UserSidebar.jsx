@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./UserSidebar.css";
 
 const UserSidebar = () => {
@@ -28,7 +28,12 @@ const UserSidebar = () => {
           </li>
           <li className="nav-item">
             <span className="nav-icon">📁</span>
-            <span>My Files</span>
+            <Link
+              to="/my-files"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              My Files
+            </Link>
           </li>
           <li className="nav-item">
             <span className="nav-icon">👥</span>
