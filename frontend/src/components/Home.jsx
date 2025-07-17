@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import pnLogo from '../assets/pn_logo.png';
 
 // You can replace this with a logo SVG or image if available
@@ -22,9 +22,9 @@ const Home = () => {
         <Logo />
         <div style={{ display: 'flex', gap: 32, fontWeight: 500, fontSize: 18 }}>
           <a href="#" style={{ color: '#0078FF', textDecoration: 'none' }}>Home</a>
-          <a href="#features" style={{ color: '#0a192f', textDecoration: 'none' }}>Features</a>
-          <a href="#faqs" style={{ color: '#0a192f', textDecoration: 'none' }}>FAQs</a>
-          <a href="#about" style={{ color: '#0a192f', textDecoration: 'none' }}>About</a>
+          <Link to="/features" style={{ color: '#0a192f', textDecoration: 'none' }}>Features</Link>
+          <Link to="/faq" style={{ color: '#0a192f', textDecoration: 'none' }}>FAQs</Link>
+          <Link to="/about" style={{ color: '#0a192f', textDecoration: 'none' }}>About</Link>
         </div>
         <button onClick={() => navigate('/login')} style={{ background: '#0078FF', color: '#fff', padding: '10px 28px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,120,255,0.08)', border: 'none', cursor: 'pointer' }}>Login / Register</button>
       </nav>
