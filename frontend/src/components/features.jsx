@@ -54,7 +54,7 @@ const Features = () => {
   return (
     <div className="features-page">
       <div className="features-header" data-aos="fade-down">
-        <h1>Explore Ping Note Features</h1>
+        <h1>Explore Pingnotes Features</h1>
         <p>Built to simplify learning, collaboration, and knowledge management.</p>
       </div>
 

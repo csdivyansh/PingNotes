@@ -12,9 +12,9 @@ const About = () => {
     <div className="about-page">
       {/* About Header - Project Info */}
       <div className="about-header" data-aos="fade-down">
-        <h1>About Ping Note</h1>
+        <h1>About Pingnotes</h1>
         <p>
-          Ping Note is a digital platform built to help students and teachers
+          Pingnotes is a digital platform built to help students and teachers
           collaborate, share notes, and manage academic resources efficiently.
         </p>
       </div>
@@ -82,7 +82,6 @@ const About = () => {
       {/* Footer */}
       <div className="about-footer" data-aos="fade-in">
         <p>🚀 Built with ❤ for modern education.</p>
-        <p>📞 support@pingnote.app</p>
       </div>
     </div>
   );
