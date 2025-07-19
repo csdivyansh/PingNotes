@@ -3,6 +3,7 @@ import UserSidebar from "./UserSidebar.jsx";
 import apiService from "../services/api.js";
 import "./UserDashboard.css";
 import { useNavigate, Link } from "react-router-dom";
+import DashNav from "./DashNav.jsx";
 import { FaDownload, FaTrash, FaPaperclip } from "react-icons/fa";
 
 const UserDashboard = () => {
@@ -192,366 +193,370 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="user-dashboard">
-      <UserSidebar />
-      <main className="dashboard-main2">
-        <header className="dashboard-header">
-          <h1>My Subjects ({subjects.length})</h1>
-          <div style={{ display: "flex" }}>
-            <button
-              className="add-subject-btn"
-              onClick={() => setShowAddSubject(true)}
-            >
-              + Add Subject
-            </button>
-            {needsGoogleDriveAuth && (
-              <button
-                type="button"
-                className="google-drive-auth-btn"
-                onClick={handleGoogleDriveAuth}
-                style={{
-                  background: "#4285f4",
-                  color: "white",
-                  border: "none",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
-              >
-                🔗 Authorize Google Drive
-              </button>
-            )}
-          </div>
-        </header>
-
-        {needsGoogleDriveAuth && (
-          <div
-            className="google-drive-notice"
-            style={{
-              background: "#fff3cd",
-              border: "1px solid #ffeaa7",
-              borderRadius: "4px",
-              padding: "1rem",
-              marginBottom: "1rem",
-              color: "#856404",
-            }}
-          >
-            <p>
-              <strong>Google Drive Access Required</strong>
-            </p>
-            <p>
-              To upload files, you need to authorize Google Drive access. Click
-              the "Authorize Google Drive" button above.
-            </p>
-          </div>
-        )}
-
-        <div className="subjects-grid">
-          {subjects.length === 0 ? (
-            <div className="no-subjects">
-              <p>No subjects yet. Create your first subject!</p>
+    <>
+      <DashNav />
+      <div className="user-dashboard">
+        <main className="dashboard-main2">
+          <header className="dashboard-header">
+            <h1>My Subjects ({subjects.length})</h1>
+            <div style={{ display: "flex" }}>
               <button
                 className="add-subject-btn"
                 onClick={() => setShowAddSubject(true)}
-                style={{ marginTop: "1rem" }}
               >
-                + Create Your First Subject
+                + Add Subject
               </button>
+              {needsGoogleDriveAuth && (
+                <button
+                  type="button"
+                  className="google-drive-auth-btn"
+                  onClick={handleGoogleDriveAuth}
+                  style={{
+                    background: "#4285f4",
+                    color: "white",
+                    border: "none",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                  }}
+                >
+                  🔗 Authorize Google Drive
+                </button>
+              )}
             </div>
-          ) : (
-            subjects.map((subject) => (
-              <div key={subject._id} className="subject-card">
-                <div className="subject-header">
-                  <h3>{subject.name}</h3>
-                  <span className="subject-code">{subject.subject_code}</span>
-                  <button
-                    className="delete-subject-btn"
-                    onClick={() => handleDeleteSubject(subject._id)}
-                    title="Delete subject"
-                  >
-                    🗑️
-                  </button>
-                </div>
+          </header>
 
-                <div className="topics-section">
-                  <div className="topics-header">
-                    <h4>Topics</h4>
+          {needsGoogleDriveAuth && (
+            <div
+              className="google-drive-notice"
+              style={{
+                background: "#fff3cd",
+                border: "1px solid #ffeaa7",
+                borderRadius: "4px",
+                padding: "1rem",
+                marginBottom: "1rem",
+                color: "#856404",
+              }}
+            >
+              <p>
+                <strong>Google Drive Access Required</strong>
+              </p>
+              <p>
+                To upload files, you need to authorize Google Drive access.
+                Click the "Authorize Google Drive" button above.
+              </p>
+            </div>
+          )}
+
+          <div className="subjects-grid">
+            {subjects.length === 0 ? (
+              <div className="no-subjects">
+                <p>No subjects yet. Create your first subject!</p>
+                <button
+                  className="add-subject-btn"
+                  onClick={() => setShowAddSubject(true)}
+                  style={{ marginTop: "1rem" }}
+                >
+                  + Create Your First Subject
+                </button>
+              </div>
+            ) : (
+              subjects.map((subject) => (
+                <div key={subject._id} className="subject-card">
+                  <div className="subject-header">
+                    <h3>{subject.name}</h3>
+                    <span className="subject-code">{subject.subject_code}</span>
                     <button
-                      className="add-topic-btn"
-                      onClick={() => {
-                        setSelectedSubject(subject);
-                        setShowAddTopic(true);
-                      }}
+                      className="delete-subject-btn"
+                      onClick={() => handleDeleteSubject(subject._id)}
+                      title="Delete subject"
                     >
-                      + Add Topic
+                      🗑️
                     </button>
                   </div>
 
-                  {subject.topics && subject.topics.length > 0 ? (
-                    <div className="topics-list">
-                      {subject.topics.map((topic) => (
-                        <div key={topic._id} className="topic-item">
-                          <div className="topic-info">
-                            <h5>{topic.name}</h5>
-                            {topic.description && (
-                              <p className="topic-description">
-                                {topic.description}
-                              </p>
-                            )}
-                          </div>
-                          <button
-                            className="btn-danger"
-                            style={{
-                              marginBottom: 8,
-                              float: "right",
-                              display: "inline-flex",
-                              alignItems: "center",
-                            }}
-                            onClick={() =>
-                              handleDeleteTopic(subject._id, topic._id)
-                            }
-                            title="Delete Topic"
-                          >
-                            <FaTrash />
-                          </button>
+                  <div className="topics-section">
+                    <div className="topics-header">
+                      <h4>Topics</h4>
+                      <button
+                        className="add-topic-btn"
+                        onClick={() => {
+                          setSelectedSubject(subject);
+                          setShowAddTopic(true);
+                        }}
+                      >
+                        + Add Topic
+                      </button>
+                    </div>
 
-                          <div className="topic-actions">
+                    {subject.topics && subject.topics.length > 0 ? (
+                      <div className="topics-list">
+                        {subject.topics.map((topic) => (
+                          <div key={topic._id} className="topic-item">
+                            <div className="topic-info">
+                              <h5>{topic.name}</h5>
+                              {topic.description && (
+                                <p className="topic-description">
+                                  {topic.description}
+                                </p>
+                              )}
+                            </div>
                             <button
-                              className="upload-file-icon-btn"
-                              title="Upload File"
+                              className="btn-danger"
                               style={{
-                                background: "#e0e7ef",
-                                border: "none",
-                                borderRadius: "50%",
-                                width: 36,
-                                height: 36,
+                                marginBottom: 8,
+                                float: "right",
                                 display: "inline-flex",
                                 alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                marginRight: 8,
-                                fontSize: 18,
-                                transition: "background 0.2s",
                               }}
-                              onClick={() => {
-                                setSelectedSubject(subject);
-                                setSelectedTopic(topic);
-                                setShowUploadFile(true);
-                              }}
+                              onClick={() =>
+                                handleDeleteTopic(subject._id, topic._id)
+                              }
+                              title="Delete Topic"
                             >
-                              <FaPaperclip />
+                              <FaTrash />
                             </button>
 
-                            {topic.files && topic.files.length > 0 && (
-                              <div className="files-list">
-                                {topic.files.map((file, fileIdx) => (
-                                  <div
-                                    key={file._id || fileIdx}
-                                    className="file-item"
-                                  >
-                                    <span className="file-name">
-                                      {file.name}
-                                    </span>
-                                    <a
-                                      href={file.drive_file_url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      download
-                                      className="view-file-btn"
-                                      style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        marginRight: 8,
-                                      }}
+                            <div className="topic-actions">
+                              <button
+                                className="upload-file-icon-btn"
+                                title="Upload File"
+                                style={{
+                                  background: "#e0e7ef",
+                                  border: "none",
+                                  borderRadius: "50%",
+                                  width: 36,
+                                  height: 36,
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                  marginRight: 8,
+                                  fontSize: 18,
+                                  transition: "background 0.2s",
+                                }}
+                                onClick={() => {
+                                  setSelectedSubject(subject);
+                                  setSelectedTopic(topic);
+                                  setShowUploadFile(true);
+                                }}
+                              >
+                                <FaPaperclip />
+                              </button>
+
+                              {topic.files && topic.files.length > 0 && (
+                                <div className="files-list">
+                                  {topic.files.map((file, fileIdx) => (
+                                    <div
+                                      key={file._id || fileIdx}
+                                      className="file-item"
                                     >
-                                      <FaDownload />
-                                    </a>
-                                    <button
-                                      onClick={() => handleDeleteFile(file._id)}
-                                      className="btn-danger"
-                                      style={{
-                                        marginLeft: 8,
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <FaTrash />
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                                      <span className="file-name">
+                                        {file.name}
+                                      </span>
+                                      <a
+                                        href={file.drive_file_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        className="view-file-btn"
+                                        style={{
+                                          display: "inline-flex",
+                                          alignItems: "center",
+                                          marginRight: 8,
+                                        }}
+                                      >
+                                        <FaDownload />
+                                      </a>
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteFile(file._id)
+                                        }
+                                        className="btn-danger"
+                                        style={{
+                                          marginLeft: 8,
+                                          display: "inline-flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <FaTrash />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="no-topics">
-                      No topics yet. Add your first topic!
-                    </p>
-                  )}
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="no-topics">
+                        No topics yet. Add your first topic!
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-      </main>
-
-      {/* Add Subject Modal */}
-      {showAddSubject && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Add New Subject</h3>
-            <form onSubmit={handleAddSubject}>
-              <div className="form-group">
-                <label>Subject Name:</label>
-                <input
-                  type="text"
-                  value={newSubject.name}
-                  onChange={(e) =>
-                    setNewSubject({ ...newSubject, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Subject Code:</label>
-                <input
-                  type="text"
-                  value={newSubject.subject_code}
-                  onChange={(e) =>
-                    setNewSubject({
-                      ...newSubject,
-                      subject_code: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="modal-actions">
-                <button type="submit" className="btn-primary">
-                  Add Subject
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => setShowAddSubject(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+              ))
+            )}
           </div>
-        </div>
-      )}
+        </main>
 
-      {/* Add Topic Modal */}
-      {showAddTopic && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Add New Topic to {selectedSubject?.name}</h3>
-            <form onSubmit={handleAddTopic}>
-              <div className="form-group">
-                <label>Topic Name:</label>
-                <input
-                  type="text"
-                  value={newTopic.name}
-                  onChange={(e) =>
-                    setNewTopic({ ...newTopic, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Description (Optional):</label>
-                <textarea
-                  value={newTopic.description}
-                  onChange={(e) =>
-                    setNewTopic({ ...newTopic, description: e.target.value })
-                  }
-                  rows="3"
-                />
-              </div>
-              <div className="modal-actions">
-                <button type="submit" className="btn-primary">
-                  Add Topic
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => setShowAddTopic(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Upload File Modal */}
-      {showUploadFile && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>
-              Upload File to {selectedSubject?.name} - {selectedTopic?.name}
-            </h3>
-            <form onSubmit={handleFileUpload}>
-              <div className="form-group">
-                <label>Select File:</label>
-                <input type="file" onChange={handleFileChange} required />
-              </div>
-              {uploadProgress > 0 && (
-                <div className="upload-progress">
-                  <div
-                    className="progress-bar"
-                    style={{ width: `${uploadProgress}%` }}
-                  ></div>
-                  <span>{Math.round(uploadProgress)}%</span>
+        {/* Add Subject Modal */}
+        {showAddSubject && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Add New Subject</h3>
+              <form onSubmit={handleAddSubject}>
+                <div className="form-group">
+                  <label>Subject Name:</label>
+                  <input
+                    type="text"
+                    value={newSubject.name}
+                    onChange={(e) =>
+                      setNewSubject({ ...newSubject, name: e.target.value })
+                    }
+                    required
+                  />
                 </div>
-              )}
-              <div className="modal-actions">
-                <button type="submit" className="btn-primary">
-                  Upload File
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => setShowUploadFile(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Delete Subject</h3>
-            <p>
-              Are you sure you want to delete this subject? This action cannot
-              be undone.
-            </p>
-            <div className="modal-actions">
-              <button onClick={confirmDeleteSubject} className="btn-danger">
-                Delete
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="btn-secondary"
-              >
-                Cancel
-              </button>
+                <div className="form-group">
+                  <label>Subject Code:</label>
+                  <input
+                    type="text"
+                    value={newSubject.subject_code}
+                    onChange={(e) =>
+                      setNewSubject({
+                        ...newSubject,
+                        subject_code: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+                <div className="modal-actions">
+                  <button type="submit" className="btn-primary">
+                    Add Subject
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setShowAddSubject(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Add Topic Modal */}
+        {showAddTopic && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Add New Topic to {selectedSubject?.name}</h3>
+              <form onSubmit={handleAddTopic}>
+                <div className="form-group">
+                  <label>Topic Name:</label>
+                  <input
+                    type="text"
+                    value={newTopic.name}
+                    onChange={(e) =>
+                      setNewTopic({ ...newTopic, name: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description (Optional):</label>
+                  <textarea
+                    value={newTopic.description}
+                    onChange={(e) =>
+                      setNewTopic({ ...newTopic, description: e.target.value })
+                    }
+                    rows="3"
+                  />
+                </div>
+                <div className="modal-actions">
+                  <button type="submit" className="btn-primary">
+                    Add Topic
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setShowAddTopic(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Upload File Modal */}
+        {showUploadFile && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>
+                Upload File to {selectedSubject?.name} - {selectedTopic?.name}
+              </h3>
+              <form onSubmit={handleFileUpload}>
+                <div className="form-group">
+                  <label>Select File:</label>
+                  <input type="file" onChange={handleFileChange} required />
+                </div>
+                {uploadProgress > 0 && (
+                  <div className="upload-progress">
+                    <div
+                      className="progress-bar"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                    <span>{Math.round(uploadProgress)}%</span>
+                  </div>
+                )}
+                <div className="modal-actions">
+                  <button type="submit" className="btn-primary">
+                    Upload File
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setShowUploadFile(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Delete Subject</h3>
+              <p>
+                Are you sure you want to delete this subject? This action cannot
+                be undone.
+              </p>
+              <div className="modal-actions">
+                <button onClick={confirmDeleteSubject} className="btn-danger">
+                  Delete
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaDownload, FaTrashRestore, FaTrash } from "react-icons/fa";
+import DashNav from "./DashNav.jsx";
 
 const TrashPage = () => {
   const [files, setFiles] = useState([]);
@@ -33,11 +34,15 @@ const TrashPage = () => {
   const handleRestore = async (fileId) => {
     setActionId(fileId);
     try {
-      await axios.post(`${apiBase}/api/files/restore/${fileId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-        },
-      });
+      await axios.post(
+        `${apiBase}/api/files/restore/${fileId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
       setFiles((prev) => prev.filter((f) => f._id !== fileId));
     } catch (err) {
       alert("Failed to restore file");
@@ -47,7 +52,8 @@ const TrashPage = () => {
   };
 
   const handlePermanentDelete = async (fileId) => {
-    if (!window.confirm("Permanently delete this file? This cannot be undone.")) return;
+    if (!window.confirm("Permanently delete this file? This cannot be undone."))
+      return;
     setActionId(fileId);
     try {
       await axios.delete(`${apiBase}/api/files/permanent/${fileId}`, {
@@ -64,57 +70,71 @@ const TrashPage = () => {
   };
 
   return (
-    <div className="subject-card" style={{ maxWidth: 900, margin: "2rem auto" }}>
-      <div className="subject-header" style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>Trash</h1>
-      </div>
-      {loading ? (
-        <div>Loading trashed files...</div>
-      ) : error ? (
-        <div style={{ color: "red" }}>{error}</div>
-      ) : files.length === 0 ? (
-        <div>No files in trash.</div>
-      ) : (
-        <div className="files-list" style={{ flexDirection: "column" }}>
-          {files.map((file) => (
-            <div key={file._id} className="file-item">
-              <span className="file-name">{file.name}</span>
-              <span style={{ color: '#64748b', fontSize: 14, marginRight: 16 }}>{file.mimetype}</span>
-              <span style={{ color: '#64748b', fontSize: 14, marginRight: 16 }}>{(file.size / 1024).toFixed(1)} KB</span>
-              <a
-                href={file.drive_file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                className="view-file-btn"
-                style={{ marginRight: 8 }}
-              >
-                <FaDownload />
-              </a>
-              <button
-                onClick={() => handleRestore(file._id)}
-                disabled={actionId === file._id}
-                className="btn-primary"
-                style={{ minWidth: 36, minHeight: 36, marginRight: 8 }}
-                title="Restore"
-              >
-                <FaTrashRestore />
-              </button>
-              <button
-                onClick={() => handlePermanentDelete(file._id)}
-                disabled={actionId === file._id}
-                className="btn-danger"
-                style={{ minWidth: 36, minHeight: 36 }}
-                title="Permanently Delete"
-              >
-                <FaTrash />
-              </button>
-            </div>
-          ))}
+    <>
+      <DashNav />
+      <div
+        className="subject-card"
+        style={{ maxWidth: 900, margin: "2rem auto" }}
+      >
+        <div className="subject-header" style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: "2rem", margin: 0 }}>Trash</h1>
         </div>
-      )}
-    </div>
+        {loading ? (
+          <div>Loading trashed files...</div>
+        ) : error ? (
+          <div style={{ color: "red" }}>{error}</div>
+        ) : files.length === 0 ? (
+          <div>No files in trash.</div>
+        ) : (
+          <div className="files-list" style={{ flexDirection: "column" }}>
+            {files.map((file) => (
+              <div key={file._id} className="file-item">
+                <span className="file-name">{file.name}</span>
+                <span
+                  style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}
+                >
+                  {file.mimetype}
+                </span>
+                <span
+                  style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}
+                >
+                  {(file.size / 1024).toFixed(1)} KB
+                </span>
+                <a
+                  href={file.drive_file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="view-file-btn"
+                  style={{ marginRight: 8 }}
+                >
+                  <FaDownload />
+                </a>
+                <button
+                  onClick={() => handleRestore(file._id)}
+                  disabled={actionId === file._id}
+                  className="btn-primary"
+                  style={{ minWidth: 36, minHeight: 36, marginRight: 8 }}
+                  title="Restore"
+                >
+                  <FaTrashRestore />
+                </button>
+                <button
+                  onClick={() => handlePermanentDelete(file._id)}
+                  disabled={actionId === file._id}
+                  className="btn-danger"
+                  style={{ minWidth: 36, minHeight: 36 }}
+                  title="Permanently Delete"
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
-export default TrashPage; 
+export default TrashPage;

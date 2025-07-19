@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DashNav from "./DashNav.jsx";
 
 const SettingsPage = () => {
   const [name, setName] = useState("");
@@ -75,56 +76,64 @@ const SettingsPage = () => {
   };
 
   return (
-    <div
-      className="subject-card"
-      style={{ maxWidth: 600, margin: "2rem auto" }}
-    >
-      <div className="subject-header" style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>Settings</h1>
-      </div>
-      <div style={{ marginBottom: 24, fontWeight: 600, color: "#374151" }}>
-        Current Name: {}<span style={{ color: "#3b82f6" }}>{currentName}</span>
-      </div>
-      <button
-        className="btn-danger"
-        style={{ marginBottom: 32 }}
-        onClick={handleDeregisterDrive}
-        disabled={loading}
+    <>
+      <DashNav />
+      <div
+        className="subject-card"
+        style={{ maxWidth: 600, margin: "2rem auto" }}
       >
-        Deregister from Google Drive
-      </button>
-      <form
-        onSubmit={handleUpdate}
-        style={{ display: "flex", flexDirection: "column", gap: 20 }}
-      >
-        <label style={{ fontWeight: 600 }}>Update Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter new name"
-          style={{ padding: 10, borderRadius: 6, border: "1px solid #d1d5db" }}
-        />
-        <button
-          type="submit"
-          className="btn-primary"
-          disabled={loading}
-          style={{ marginTop: 16 }}
-        >
-          {loading ? "Updating..." : "Update Profile"}
-        </button>
-      </form>
-      {message && (
-        <div
-          style={{
-            marginTop: 24,
-            color: message.includes("success") ? "green" : "#ef4444",
-          }}
-        >
-          {message}
+        <div className="subject-header" style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: "2rem", margin: 0 }}>Settings</h1>
         </div>
-      )}
-    </div>
+        <div style={{ marginBottom: 24, fontWeight: 600, color: "#374151" }}>
+          Current Name: {}
+          <span style={{ color: "#3b82f6" }}>{currentName}</span>
+        </div>
+        <button
+          className="btn-danger"
+          style={{ marginBottom: 32 }}
+          onClick={handleDeregisterDrive}
+          disabled={loading}
+        >
+          Deregister from Google Drive
+        </button>
+        <form
+          onSubmit={handleUpdate}
+          style={{ display: "flex", flexDirection: "column", gap: 20 }}
+        >
+          <label style={{ fontWeight: 600 }}>Update Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter new name"
+            style={{
+              padding: 10,
+              borderRadius: 6,
+              border: "1px solid #d1d5db",
+            }}
+          />
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+            style={{ marginTop: 16 }}
+          >
+            {loading ? "Updating..." : "Update Profile"}
+          </button>
+        </form>
+        {message && (
+          <div
+            style={{
+              marginTop: 24,
+              color: message.includes("success") ? "green" : "#ef4444",
+            }}
+          >
+            {message}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
