@@ -8,6 +8,7 @@ import AuthSuccess from "./components/AuthSuccess";
 import About from "./components/About";
 import Features from "./components/features";
 import FAQ from "./components/FAQ";
+import Plans from "./components/Plans";
 import ExplorePage from "./components/ExplorePage";
 import DashboardLayout from "./components/DashboardLayout";
 import MyFiles from "./components/MyFiles";
@@ -35,6 +36,7 @@ function App() {
         <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="/about" element={<About />} />
         <Route path="/features" element={<Features />} />
+        <Route path="/plans" element={<Plans />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/explore" element={<ExplorePage />} />
       </Routes>

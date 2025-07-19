@@ -82,6 +82,20 @@ const Navbar = () => {
             Features
           </Link>
           <Link
+            to="/plans"
+            style={{
+              color: location.pathname === "/plans" ? "#0078FF" : "#0a192f",
+              textDecoration: "none",
+              fontWeight: 700,
+              fontSize: 18,
+              fontFamily: "Poppins, Arial, sans-serif",
+              letterSpacing: 0.5,
+              transition: "color 0.2s",
+            }}
+          >
+            Plans
+          </Link>
+          <Link
             to="/faq"
             style={{
               color: location.pathname === "/faq" ? "#0078FF" : "#0a192f",
@@ -109,6 +123,7 @@ const Navbar = () => {
           >
             About
           </Link>
+          
         </div>
         {loggedIn ? (
           <button
