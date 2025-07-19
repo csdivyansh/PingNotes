@@ -1,10 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+
+body,
+html {
+  font-family: "Raleway", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Raleway", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+button,
+input,
+select,
+textarea,
+a,
+.file-name,
+.subject-header,
+.dashboard-header,
+.add-subject-btn,
+.add-topic-btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  font-family: "Raleway", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-} 
+}
 
-footer {  
+footer {
   width: 100%;
   padding: 1rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;

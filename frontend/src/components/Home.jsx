@@ -9,10 +9,12 @@ const Logo = () => (
   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
     <span
       style={{
-        fontWeight: 700,
+        fontWeight: 800,
         fontSize: 24,
         color: "#0a192f",
         letterSpacing: 1,
+        fontFamily: "Raleway, sans-serif",
+        fontStyle: "normal",
       }}
     >
       Pingnotes
