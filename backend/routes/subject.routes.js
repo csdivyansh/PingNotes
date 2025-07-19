@@ -11,6 +11,7 @@ import {
   deleteTopic,
   addFileToTopic,
   removeFileFromTopic,
+  aiLinkSubjectToFile,
 } from "../controllers/subject/subject.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 
@@ -32,6 +33,9 @@ router.delete("/:subjectId/topics/:topicId", deleteTopic);
 // Topic file management
 router.post("/:subjectId/topics/:topicId/files", addFileToTopic);
 router.delete("/:subjectId/topics/:topicId/files/:fileId", removeFileFromTopic);
+
+// AI subject association
+router.post("/ai-link", aiLinkSubjectToFile);
 
 // Subject CRUD operations (specific subject)
 router.get("/:id", getSubjectById);

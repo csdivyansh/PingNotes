@@ -16,7 +16,10 @@ export const getAllSubjects = async (req, res) => {
     for (const subject of subjects) {
       for (const topic of subject.topics) {
         if (topic.files && topic.files.length > 0) {
-          topic.files = await File.find({ _id: { $in: topic.files }, is_deleted: false });
+          topic.files = await File.find({
+            _id: { $in: topic.files },
+            is_deleted: false,
+          });
         }
       }
     }
@@ -297,6 +300,44 @@ export const removeFileFromTopic = async (req, res) => {
     res.json({ message: "File removed from topic successfully", topic });
   } catch (error) {
     console.error("Error removing file from topic:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const aiLinkSubjectToFile = async (req, res) => {
+  const { subjectName, fileId } = req.body;
+  if (!subjectName || !fileId) {
+    return res
+      .status(400)
+      .json({ message: "Subject name and file ID are required" });
+  }
+  try {
+    // Check if subject exists for this user
+    let subject = await Subject.findOne({
+      name: subjectName,
+      created_by: req.user.id,
+      created_by_role: req.user.role,
+    });
+    if (!subject) {
+      // Create new subject
+      subject = new Subject({
+        name: subjectName,
+        subject_code: subjectName.toLowerCase().replace(/\s+/g, "_"),
+        created_by: req.user.id,
+        created_by_role: req.user.role,
+      });
+      await subject.save();
+    }
+    // Link file to subject (top-level, not topic)
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+    file.linked_subject = subject._id;
+    await file.save();
+    res.json({ message: "Subject linked to file successfully", subject });
+  } catch (error) {
+    console.error("AI subject link error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

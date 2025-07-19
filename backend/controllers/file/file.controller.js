@@ -7,6 +7,8 @@ import {
 import { refreshGoogleToken } from "../../services/googleAuth.service.js";
 import User from "../../models/user.model.js";
 import Teacher from "../../models/teacher.model.js";
+import { extractTextFromFile } from "../../utils/fileTextExtractor.js";
+import { suggestSubjectFromText } from "../../utils/subjectSuggester.js";
 
 export const uploadFiles = async (req, res) => {
   if (!req.files || req.files.length === 0)
@@ -128,19 +130,32 @@ export const uploadFiles = async (req, res) => {
           .json({ message: "Error saving file to database." });
       }
 
+      // --- AI-powered subject suggestion ---
+      let suggestedSubject = null;
       try {
-        fs.unlinkSync(file.path); // 🧹 Clean temp
+        const text = await extractTextFromFile(file.path, file.mimetype);
+        suggestedSubject = suggestSubjectFromText(text);
+      } catch (extractErr) {
+        console.error("Text extraction/subject suggestion error:", extractErr);
+      }
+
+      try {
+        fs.unlinkSync(file.path); // �� Clean temp
         console.log("Temp file cleaned:", file.path);
       } catch (cleanupError) {
         console.error("File cleanup error:", cleanupError);
         // Don't fail the upload for cleanup errors
       }
+
+      // Only process the first file for subject suggestion for now
+      break;
     }
 
     console.log("Upload completed successfully:", savedFiles.length, "files");
     res.status(201).json({
       message: `${savedFiles.length} file(s) uploaded successfully`,
       files: savedFiles,
+      suggestedSubject: savedFiles.length > 0 ? suggestedSubject : null,
     });
   } catch (error) {
     console.error("Upload error:", error);

@@ -1,107 +1,96 @@
-* {
-  padding: 0;
+body {
   margin: 0;
-  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #eef5ff, #fdfdff);
+  color: #111;
 }
 
-.features-page {
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #f0f4ff, #f9fcff);
-  linear-gradient(135deg, #f0f4ff, #f9fcff);
-  min-height: 100vh;
-  font-family: "Segoe UI", sans-serif;
+.features-container {
+  padding: 80px 24px;
+  max-width: 1200px;
+  margin: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .features-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
+  position: relative;
 }
 
 .features-header h1 {
-  font-size: 36px;
-  color: #004aad;
-  margin-bottom: 10px;
+  font-size: 48px;
+  color: #000;
+  font-weight: 700;
+}
+
+.features-header h1 span {
+  color: #007bff;
+  background: linear-gradient(to right, #007bff, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .features-header p {
   font-size: 18px;
   color: #555;
-  max-width: 700px;
-  margin: 0 auto;
+  margin-top: 8px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.features-zigzag {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  max-width: 900px;
-  margin: 0 auto;
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
 }
 
-.feature-zig {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease;
-}
-
-.feature-zig:hover {
-  transform: translateY(-5px);
-}
-
-.feature-zig.left {
-  flex-direction: row;
-}
-
-.feature-zig.right {
-  flex-direction: row-reverse;
-}
-
-.icon-circle {
-  font-size: 36px;
-  background-color: #e3ecff;
-  color: #004aad;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.feature-zig h2 {
-  font-size: 22px;
-  margin-bottom: 8px;
-  color: #222;
-}
-
-.feature-zig p {
-  font-size: 16px;
-  color: #666;
-}
-
-.features-end-note {
-  margin-top: 60px;
+.card {
+  background: #ffffffcc;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 123, 255, 0.1);
   text-align: center;
+  transition: all 0.4s ease;
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+  display: block;
+  position: relative;
 }
 
-.features-end-note h3 {
-  font-size: 20px;
-  color: #004aad;
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 123, 255, 0.25);
+  border: 1px solid #007bff33;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .feature-zig {
-    flex-direction: column !important;
-    text-align: center;
-  }
+.card-icon {
+  margin-bottom: 18px;
+}
 
-  .icon-circle {
-    margin-bottom: 10px;
+.card-icon.glow {
+  animation: glow 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 0px #007bff);
   }
+  to {
+    filter: drop-shadow(0 0 10px #007bff);
+  }
+}
+
+.card h3 {
+  font-size: 22px;
+  color: #000;
+  margin-bottom: 12px;
+}
+
+.card p {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
 }

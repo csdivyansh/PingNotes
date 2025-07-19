@@ -22,6 +22,10 @@ const UserDashboard = () => {
   const [newSubject, setNewSubject] = useState({ name: "", subject_code: "" });
   const [newTopic, setNewTopic] = useState({ name: "", description: "" });
   const [needsGoogleDriveAuth, setNeedsGoogleDriveAuth] = useState(false);
+  const [suggestedSubject, setSuggestedSubject] = useState("");
+  const [showSubjectModal, setShowSubjectModal] = useState(false);
+  const [subjectInput, setSubjectInput] = useState("");
+  const [uploadedFileId, setUploadedFileId] = useState(null);
 
   useEffect(() => {
     fetchSubjects();
@@ -87,7 +91,7 @@ const UserDashboard = () => {
     console.log("Topic ID:", selectedTopic?._id);
 
     try {
-      await apiService.uploadFile(
+      const response = await apiService.uploadFile(
         uploadFile,
         (progress) => {
           setUploadProgress(progress);
@@ -100,7 +104,15 @@ const UserDashboard = () => {
       setUploadFile(null);
       setShowUploadFile(false);
       setUploadProgress(0);
-      fetchSubjects();
+      // If backend returns a suggestedSubject, show modal
+      if (response.suggestedSubject) {
+        setSuggestedSubject(response.suggestedSubject);
+        setSubjectInput(response.suggestedSubject);
+        setUploadedFileId(response.files && response.files[0]?._id);
+        setShowSubjectModal(true);
+      } else {
+        fetchSubjects();
+      }
     } catch (error) {
       console.error("File upload error:", error);
       if (error.message.includes("401") || error.message.includes("Google")) {
@@ -111,6 +123,23 @@ const UserDashboard = () => {
       } else {
         alert("Failed to upload file: " + error.message);
       }
+    }
+  };
+
+  const handleConfirmSubject = async () => {
+    // Call backend to create/associate subject with file
+    try {
+      await apiService.createSubjectAndLinkFile({
+        subjectName: subjectInput,
+        fileId: uploadedFileId,
+      });
+      setShowSubjectModal(false);
+      setSuggestedSubject("");
+      setSubjectInput("");
+      setUploadedFileId(null);
+      fetchSubjects();
+    } catch (err) {
+      alert("Failed to create/associate subject");
     }
   };
 
@@ -548,6 +577,35 @@ const UserDashboard = () => {
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   className="btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Subject Suggestion Modal */}
+        {showSubjectModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Suggested Subject</h3>
+              <div className="form-group">
+                <label>Subject Name:</label>
+                <input
+                  type="text"
+                  value={subjectInput}
+                  onChange={(e) => setSubjectInput(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button className="btn-primary" onClick={handleConfirmSubject}>
+                  Confirm
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={() => setShowSubjectModal(false)}
                 >
                   Cancel
                 </button>

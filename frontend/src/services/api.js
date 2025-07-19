@@ -255,6 +255,14 @@ class ApiService {
   async getAdminDashboardStats() {
     return this.request("/api/admin/stats");
   }
+
+  // Create subject and link file
+  async createSubjectAndLinkFile({ subjectName, fileId }) {
+    return this.request("/api/subjects/ai-link", {
+      method: "POST",
+      body: JSON.stringify({ subjectName, fileId }),
+    });
+  }
 }
 
 export default new ApiService();
