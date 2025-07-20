@@ -25,6 +25,7 @@ export const uploadFiles = async (req, res) => {
 
     const savedFiles = [];
     let userAccessToken = null;
+    let suggestedSubject = null; // <-- Move here
 
     // Get user's Google access token
     if (req.user.role === "user") {
@@ -131,10 +132,14 @@ export const uploadFiles = async (req, res) => {
       }
 
       // --- AI-powered subject suggestion ---
-      let suggestedSubject = null;
       try {
         const text = await extractTextFromFile(file.path, file.mimetype);
-        suggestedSubject = suggestSubjectFromText(text);
+        console.log(
+          "Extracted text:",
+          text && text.slice ? text.slice(0, 200) : text
+        );
+        suggestedSubject = await suggestSubjectFromText(text);
+        console.log("Suggested subject:", suggestedSubject);
       } catch (extractErr) {
         console.error("Text extraction/subject suggestion error:", extractErr);
       }

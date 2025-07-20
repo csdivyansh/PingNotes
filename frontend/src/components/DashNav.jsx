@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useGlobalFileUpload } from "./GlobalFileUploadContext";
 
 const DashNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const fileInputRef = useRef(null);
+  const { openUploadModal } = useGlobalFileUpload();
 
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -153,7 +155,7 @@ const DashNav = () => {
           </div>
           <>
             <button
-              onClick={handleUploadClick}
+              onClick={openUploadModal}
               style={{
                 background: "#0078FF",
                 color: "#fff",
@@ -173,12 +175,6 @@ const DashNav = () => {
             >
               Upload File
             </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
           </>
         </div>
       </nav>

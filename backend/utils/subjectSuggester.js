@@ -1,21 +1,54 @@
-import natural from "natural";
+import fetch from "node-fetch";
 
-export function suggestSubjectFromText(text, numKeywords = 3) {
-  const tokenizer = new natural.WordTokenizer();
-  const words = tokenizer.tokenize(text.toLowerCase());
-  // Remove stopwords and short words
-  const stopwords = new Set(natural.stopwords);
-  const filtered = words.filter((w) => !stopwords.has(w) && w.length > 2);
-  // Count word frequencies
-  const freq = {};
-  filtered.forEach((w) => {
-    freq[w] = (freq[w] || 0) + 1;
+const HF_TOKEN = process.env.HUGGINGFACE_HUB_TOKEN;
+const API_URL =
+  "https://api-inference.huggingface.co/models/facebook/bart-large-mnli";
+
+const SUBJECT_CANDIDATES = [
+  "Database Management",
+  "DBMS",
+  "Database",
+  "Database Management System",
+  "SQL",
+  "Relational Databases",
+  "Mathematics",
+  "Physics",
+  "Programming",
+  "History",
+  "Biology",
+  "Chemistry",
+  "Economics",
+  "English",
+  "Computer Science",
+  "Artificial Intelligence",
+  "Data Structures",
+  "Operating Systems",
+  "Networks",
+  "Web Development",
+  "Machine Learning",
+  // ...add more as needed
+];
+
+export async function suggestSubjectFromText(text) {
+  console.log(
+    "Text sent to HF API:",
+    text && text.slice ? text.slice(0, 200) : text
+  );
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${HF_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      inputs: text,
+      parameters: { candidate_labels: SUBJECT_CANDIDATES },
+    }),
   });
-  // Sort by frequency
-  const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
-  // Return top N keywords as a subject string
-  return sorted
-    .slice(0, numKeywords)
-    .map(([w]) => w)
-    .join(" ");
+  const result = await response.json();
+  console.log("HF API result:", result);
+  if (result && result.labels && result.labels.length > 0) {
+    return result.labels[0];
+  }
+  return null;
 }

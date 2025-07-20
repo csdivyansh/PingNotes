@@ -325,17 +325,35 @@ export const aiLinkSubjectToFile = async (req, res) => {
         subject_code: subjectName.toLowerCase().replace(/\s+/g, "_"),
         created_by: req.user.id,
         created_by_role: req.user.role,
+        topics: [],
       });
       await subject.save();
     }
-    // Link file to subject (top-level, not topic)
+    // Find or create 'General' topic
+    let generalTopic = subject.topics.find((t) => t.name === "General");
+    if (!generalTopic) {
+      subject.topics.push({ name: "General", description: "General files" });
+      await subject.save();
+      generalTopic = subject.topics.find((t) => t.name === "General");
+    }
+    // Add file to 'General' topic if not already present
+    if (!generalTopic.files) generalTopic.files = [];
+    if (!generalTopic.files.some((fId) => fId.toString() === fileId)) {
+      generalTopic.files.push(fileId);
+      await subject.save();
+    }
+    // Link file to subject and topic
     const file = await File.findById(fileId);
     if (!file) {
       return res.status(404).json({ message: "File not found" });
     }
     file.linked_subject = subject._id;
+    file.linked_topic = generalTopic._id;
     await file.save();
-    res.json({ message: "Subject linked to file successfully", subject });
+    res.json({
+      message: "Subject and topic linked to file successfully",
+      subject,
+    });
   } catch (error) {
     console.error("AI subject link error:", error);
     res.status(500).json({ message: "Internal server error" });
