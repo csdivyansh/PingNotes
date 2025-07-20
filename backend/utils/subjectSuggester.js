@@ -1,16 +1,12 @@
 import fetch from "node-fetch";
 
-const HF_TOKEN = process.env.HUGGINGFACE_HUB_TOKEN;
-const API_URL =
-  "https://api-inference.huggingface.co/models/facebook/bart-large-mnli";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
+  GEMINI_API_KEY;
 
 const SUBJECT_CANDIDATES = [
-  "Database Management",
-  "DBMS",
-  "Database",
-  "Database Management System",
-  "SQL",
-  "Relational Databases",
+  "Database Management Systems",
   "Mathematics",
   "Physics",
   "Programming",
@@ -26,29 +22,66 @@ const SUBJECT_CANDIDATES = [
   "Networks",
   "Web Development",
   "Machine Learning",
+  "Software Engineering",
   // ...add more as needed
 ];
 
-export async function suggestSubjectFromText(text) {
-  console.log(
-    "Text sent to HF API:",
-    text && text.slice ? text.slice(0, 200) : text
-  );
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${HF_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inputs: text,
-      parameters: { candidate_labels: SUBJECT_CANDIDATES },
-    }),
-  });
-  const result = await response.json();
-  console.log("HF API result:", result);
-  if (result && result.labels && result.labels.length > 0) {
-    return result.labels[0];
+export async function normalizeSubjectWithGemini(subject) {
+  if (!subject) return subject;
+  const prompt = `Given the subject name "${subject}", map it to its full canonical academic subject name from this list: [${SUBJECT_CANDIDATES.join(
+    ", "
+  )}]. Respond with only the canonical name.`;
+  const body = {
+    contents: [{ parts: [{ text: prompt }] }],
+  };
+  try {
+    const response = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const result = await response.json();
+    console.log("Gemini normalization result:", result);
+    const normalized =
+      result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    return normalized || subject;
+  } catch (err) {
+    console.error("Gemini normalization error:", err);
+    return subject;
   }
-  return null;
+}
+
+export async function suggestSubjectFromText(text) {
+  // Heuristic: if text contains dbms/database/sql, suggest DBMS
+  if (text && /\b(dbms|database|sql)\b/i.test(text)) {
+    console.log("Heuristic matched: DBMS");
+    return "Database Management Systems";
+  }
+  if (!text || !text.trim()) {
+    console.log("No text extracted for subject suggestion.");
+    return null;
+  }
+  const prompt = `Given the following text, what is the most likely academic subject? Choose from: [${SUBJECT_CANDIDATES.join(
+    ", "
+  )}]. Respond with only the subject name.\nText: ${text}`;
+  const body = {
+    contents: [{ parts: [{ text: prompt }] }],
+  };
+  try {
+    const response = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const result = await response.json();
+    console.log("Gemini API result:", result);
+    let subject = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (subject) {
+      subject = await normalizeSubjectWithGemini(subject);
+    }
+    return subject || null;
+  } catch (err) {
+    console.error("Gemini API error:", err);
+    return null;
+  }
 }

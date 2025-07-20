@@ -108,9 +108,22 @@ export function GlobalFileUploadProvider({ children }) {
                   <span>{Math.round(uploadProgress)}%</span>
                 </div>
               )}
+              {/* Show AI loading message if file is uploaded but suggestion not ready */}
+              {uploadFile && !suggestedSubject && loading && (
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    color: "#3b82f6",
+                    fontWeight: 500,
+                  }}
+                >
+                  Using AI to get file subject...
+                </div>
+              )}
+              {/* Show AI suggestion if available */}
               {suggestedSubject && (
                 <div className="form-group">
-                  <label>Suggested Subject:</label>
+                  <label>AI Thinks the subject is:</label>
                   <input
                     type="text"
                     value={subjectInput}

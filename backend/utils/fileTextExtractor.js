@@ -3,6 +3,16 @@ import pdfParse from "pdf-parse";
 import { fromPath as pdf2picFromPath } from "pdf2pic";
 import Tesseract from "tesseract.js";
 import mammoth from "mammoth";
+import path from "path";
+
+function cleanExtractedText(text) {
+  if (!text) return "";
+  // Remove lines like 'Scanned with ... Scanner' (case-insensitive)
+  return text
+    .split("\n")
+    .filter((line) => !/^scanned with .+scanner$/i.test(line.trim()))
+    .join("\n");
+}
 
 function isMeaningfulText(text) {
   if (!text || text.trim().length < 50) return false;
@@ -21,33 +31,30 @@ function isMeaningfulText(text) {
 }
 
 async function extractTextFromPDF(filePath) {
-  const dataBuffer = fs.readFileSync(filePath);
-  const data = await pdfParse(dataBuffer);
-  if (isMeaningfulText(data.text)) {
-    console.log("Used embedded text extraction");
-    return data.text;
-  }
-  // Fallback to OCR if text is insufficient or repetitive
-  console.log("Falling back to OCR for PDF");
+  // Always use image-based OCR for the first page
+  console.log("Extracting text from PDF via image OCR (first page only)");
   const pdf2pic = pdf2picFromPath(filePath, {
-    density: 100,
+    density: 50,
     format: "png",
     saveFilename: "temp",
     savePath: "./",
   });
-  const numPages = Math.min(data.numpages || 1, 3); // Only process first 3 pages
   let ocrText = "";
-  for (let i = 1; i <= numPages; i++) {
-    try {
-      const page = await pdf2pic(i);
-      const {
-        data: { text },
-      } = await Tesseract.recognize(page.path, "eng");
-      ocrText += text + "\n";
-      fs.unlinkSync(page.path); // Clean up temp image
-    } catch (err) {
-      console.error(`OCR failed for page ${i}:`, err);
-    }
+  try {
+    const page = await pdf2pic(1);
+    const {
+      data: { text },
+    } = await Tesseract.recognize(page.path, "eng");
+    ocrText += text + "\n";
+    fs.unlinkSync(page.path); // Clean up temp image
+  } catch (err) {
+    console.error(`OCR failed for PDF page 1:`, err);
+  }
+  ocrText = cleanExtractedText(ocrText);
+  if (!isMeaningfulText(ocrText)) {
+    throw new Error(
+      "Could not extract meaningful text from your file. Please upload a higher-quality scan or a text-based file."
+    );
   }
   return ocrText;
 }
@@ -59,6 +66,13 @@ async function extractTextFromDOCX(filePath) {
 
 async function extractTextFromTXT(filePath) {
   return fs.readFileSync(filePath, "utf-8");
+}
+
+async function extractTextFromImage(filePath) {
+  const {
+    data: { text },
+  } = await Tesseract.recognize(filePath, "eng");
+  return text;
 }
 
 export async function extractTextFromFile(filePath, mimetype) {
@@ -76,6 +90,13 @@ export async function extractTextFromFile(filePath, mimetype) {
     filePath.endsWith(".sql")
   ) {
     return await extractTextFromTXT(filePath);
+  } else if (
+    mimetype.startsWith("image/") ||
+    [".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"].includes(
+      path.extname(filePath).toLowerCase()
+    )
+  ) {
+    return await extractTextFromImage(filePath);
   } else {
     throw new Error("Unsupported file type for text extraction");
   }

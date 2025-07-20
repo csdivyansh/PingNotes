@@ -111,7 +111,7 @@ const UserDashboard = () => {
         setUploadedFileId(response.files && response.files[0]?._id);
         setShowSubjectModal(true);
       } else {
-        fetchSubjects();
+      fetchSubjects();
       }
     } catch (error) {
       console.error("File upload error:", error);
