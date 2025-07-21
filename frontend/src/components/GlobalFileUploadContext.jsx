@@ -42,6 +42,7 @@ export function GlobalFileUploadProvider({ children }) {
       const response = await apiService.uploadFile(uploadFile, (progress) =>
         setUploadProgress(progress)
       );
+      console.log("Upload response:", response); // Debug log
       if (response.suggestedSubject) {
         setSuggestedSubject(response.suggestedSubject);
         setSubjectInput(response.suggestedSubject);

@@ -13,20 +13,21 @@ const userSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now },
   is_active: { type: Boolean, default: true },
   is_deleted: { type: Boolean, default: false },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 // Pre-save hook to hash password (only if password exists)
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password') || !this.password) return next()
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-  next()
-})
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password") || !this.password) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
 // Method to compare password
 userSchema.methods.matchPassword = function (enteredPassword) {
   if (!this.password) return false; // Google OAuth users don't have password
-  return bcrypt.compare(enteredPassword, this.password)
-}
+  return bcrypt.compare(enteredPassword, this.password);
+};
 
 export default mongoose.model("User", userSchema);

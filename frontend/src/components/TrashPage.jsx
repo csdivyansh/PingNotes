@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaDownload, FaTrashRestore, FaTrash } from "react-icons/fa";
 import DashNav from "./DashNav.jsx";
+import apiService from "../services/api";
 
 const TrashPage = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [actionId, setActionId] = useState(null);
+  const [emptying, setEmptying] = useState(false);
   const apiBase = import.meta.env.VITE_API_URL || "";
 
   useEffect(() => {
@@ -69,6 +71,24 @@ const TrashPage = () => {
     }
   };
 
+  const handleEmptyTrash = async () => {
+    if (
+      !window.confirm(
+        "Are you sure you want to permanently delete all files in the trash? This cannot be undone."
+      )
+    )
+      return;
+    setEmptying(true);
+    try {
+      await apiService.emptyTrash();
+      fetchTrashedFiles();
+    } catch (err) {
+      alert("Failed to empty trash");
+    } finally {
+      setEmptying(false);
+    }
+  };
+
   return (
     <>
       <DashNav />
@@ -78,6 +98,14 @@ const TrashPage = () => {
       >
         <div className="subject-header" style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: "2rem", margin: 0 }}>Trash</h1>
+          <button
+            className="btn-danger"
+            style={{ marginLeft: 16, minWidth: 120 }}
+            onClick={handleEmptyTrash}
+            disabled={emptying}
+          >
+            {emptying ? "Emptying..." : "Empty Trash"}
+          </button>
         </div>
         {loading ? (
           <div>Loading trashed files...</div>

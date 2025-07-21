@@ -31,8 +31,16 @@ function isMeaningfulText(text) {
 }
 
 async function extractTextFromPDF(filePath) {
-  // Always use image-based OCR for the first page
-  console.log("Extracting text from PDF via image OCR (first page only)");
+  // Try pdf-parse first
+  const dataBuffer = fs.readFileSync(filePath);
+  const data = await pdfParse(dataBuffer);
+  let text = cleanExtractedText(data.text);
+  if (isMeaningfulText(text)) {
+    console.log("Used embedded text extraction");
+    return text;
+  }
+  // Fallback to image-based OCR for the first page
+  console.log("Falling back to OCR for PDF");
   const pdf2pic = pdf2picFromPath(filePath, {
     density: 50,
     format: "png",

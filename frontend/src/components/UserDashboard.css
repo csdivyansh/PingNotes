@@ -101,6 +101,15 @@
   font-weight: 600;
   letter-spacing: 1px;
   margin-left: 1rem;
+  max-width: 220px;
+  min-width: 120px;
+  width: 220px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
 }
 .delete-subject-btn {
   background: none;

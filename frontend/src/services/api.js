@@ -263,6 +263,20 @@ class ApiService {
       body: JSON.stringify({ subjectName, fileId }),
     });
   }
+
+  // Permanently delete all trashed files
+  async emptyTrash() {
+    return this.request("/api/files/empty-trash", { method: "DELETE" });
+  }
+
+  // Share a file with friends
+  async shareFile(fileId, friendIdsOrEmails) {
+    return this.request(`/api/files/${fileId}/share`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...this.getHeaders() },
+      body: JSON.stringify({ friendIdsOrEmails }),
+    });
+  }
 }
 
 export default new ApiService();
