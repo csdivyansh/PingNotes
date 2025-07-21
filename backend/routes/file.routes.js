@@ -11,6 +11,7 @@ import {
   getFilesSharedWithGroup,
   emptyTrash,
   shareFile,
+  deleteAllFiles, // <-- add this import
 } from "../controllers/file/file.controller.js";
 
 const router = express.Router();
@@ -40,6 +41,11 @@ router.get("/trash", async (req, res) => {
 router.post("/restore/:id", restoreFile);
 router.delete("/permanent/:id", permanentDeleteFile);
 router.delete("/empty-trash", emptyTrash);
+router.delete(
+  "/all",
+  requireAuth(["admin", "teacher", "user"]),
+  deleteAllFiles
+);
 router.get("/:id", getFileById);
 router.delete("/:id", deleteFile);
 router.get("/shared/group/:groupId", getFilesSharedWithGroup);

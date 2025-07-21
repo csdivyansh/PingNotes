@@ -277,6 +277,11 @@ class ApiService {
       body: JSON.stringify({ friendIdsOrEmails }),
     });
   }
+
+  // Delete all files for the current user
+  async deleteAllFiles() {
+    return this.request("/api/files/all", { method: "DELETE" });
+  }
 }
 
 export default new ApiService();

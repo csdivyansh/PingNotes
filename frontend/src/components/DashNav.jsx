@@ -2,6 +2,23 @@ import React, { useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGlobalFileUpload } from "./GlobalFileUploadContext";
 
+const Logo = () => (
+  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+    <span
+      style={{
+        fontWeight: 800,
+        fontSize: 24,
+        color: "#0a192f",
+        letterSpacing: 1,
+        fontFamily: "Raleway, sans-serif",
+        fontStyle: "normal",
+      }}
+    >
+      Pingnotes
+    </span>
+  </div>
+);
+
 const DashNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,26 +65,10 @@ const DashNav = () => {
             padding: "20px 32px 12px 32px",
           }}
         >
-          <button
-            onClick={handleHomeClick}
-            style={{
-              background: "#0078FF",
-              color: "#fff",
-              padding: "10px 28px",
-              borderRadius: 10,
-              fontWeight: 700,
-              fontSize: 16,
-              fontFamily: "Poppins, Arial, sans-serif",
-              textDecoration: "none",
-              boxShadow: "0 2px 8px rgba(0,120,255,0.08)",
-              border: "none",
-              cursor: "pointer",
-              letterSpacing: 0.5,
-              transition: "background 0.2s",
-            }}
-          >
-            Home
-          </button>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Logo />
+          </Link>
+
           <div style={{ display: "flex", gap: 32 }}>
             <Link
               to="/dashboard"

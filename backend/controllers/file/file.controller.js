@@ -444,3 +444,22 @@ export const shareFile = async (req, res) => {
     res.status(500).json({ message: "Error sharing file" });
   }
 };
+
+// Delete all files for the current user (soft delete)
+export const deleteAllFiles = async (req, res) => {
+  try {
+    const result = await File.updateMany(
+      {
+        uploaded_by: req.user.id,
+        uploaded_by_role:
+          req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
+        is_deleted: false,
+      },
+      { $set: { is_deleted: true } }
+    );
+    res.json({ message: `All files deleted (${result.modifiedCount})` });
+  } catch (error) {
+    console.error("Delete all files error:", error);
+    res.status(500).json({ message: "Error deleting all files" });
+  }
+};
