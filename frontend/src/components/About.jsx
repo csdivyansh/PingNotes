@@ -39,10 +39,21 @@ const About = () => {
             <div className="dev-card" data-aos="zoom-in">
               <div
                 className="dev-avatar initials"
+                style={{ backgroundColor: "#003d80" }}
+              >
+                DV
+              </div>
+              <h3>Divyansh Varshney</h3>
+              <p>Backend, API & Devops </p>
+            </div>
+            <div className="dev-card" data-aos="zoom-in">
+              <div
+                className="dev-avatar initials"
                 style={{ backgroundColor: "#007bff" }}
               >
                 AK
               </div>
+
               <h3>Amit Kumar</h3>
               <p>Frontend Developer</p>
             </div>
@@ -56,16 +67,7 @@ const About = () => {
               <h3>Gaurav Chaudhary</h3>
               <p>Database Specialist</p>
             </div>
-            <div className="dev-card" data-aos="zoom-in">
-              <div
-                className="dev-avatar initials"
-                style={{ backgroundColor: "#003d80" }}
-              >
-                DV
-              </div>
-              <h3>Divyansh Varshney</h3>
-              <p>Backend, API & Devops </p>
-            </div>
+
             <div className="dev-card" data-aos="zoom-in">
               <div
                 className="dev-avatar initials"

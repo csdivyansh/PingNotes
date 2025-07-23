@@ -123,6 +123,11 @@ const Navbar = () => {
           display: flex;
           gap: 32px;
           align-items: center;
+          position: static;
+          background: none;
+          flex-direction: row;
+          padding: 0;
+          box-shadow: none;
         }
         .navbar-links a {
           color: #0a192f;
@@ -130,7 +135,6 @@ const Navbar = () => {
           font-weight: 700;
           font-size: 18px;
           font-family: Poppins, Arial, sans-serif;
-          letter-spacing: 0.5px;
           transition: color 0.2s;
         }
         .navbar-links a.active {
@@ -148,7 +152,6 @@ const Navbar = () => {
           box-shadow: 0 2px 8px rgba(0,120,255,0.08);
           border: none;
           cursor: pointer;
-          letter-spacing: 0.5px;
           transition: background 0.2s;
           margin-left: 16px;
         }

@@ -13,7 +13,7 @@ const roles = [
 const GOOGLE_CLIENT_ID =
   import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID";
 
-export default function RoleSelection() {
+function RoleSelection() {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -137,6 +137,7 @@ export default function RoleSelection() {
     <>
       <Navbar />
       <div
+        className="role-selection-main"
         style={{
           minHeight: "85vh",
           background: "#fff",
@@ -146,11 +147,20 @@ export default function RoleSelection() {
           justifyContent: "center",
         }}
       >
-        <h2 style={{ marginBottom: 100, fontSize: 70 }}>You are a......</h2>
-        <div style={{ display: "flex", gap: 32 }}>
+        <h2
+          className="role-selection-heading"
+          style={{ marginBottom: 100, fontSize: 70 }}
+        >
+          You are a......
+        </h2>
+        <div
+          className="role-selection-btns"
+          style={{ display: "flex", gap: 32 }}
+        >
           {roles.map((role) => (
             <button
               key={role.label}
+              className="role-btn"
               style={{
                 background: "#000",
                 color: "#fff",
@@ -228,7 +238,64 @@ export default function RoleSelection() {
           width: 100%;
           z-index: 100;
         }
+        .role-selection-main {
+          padding: 0 24px;
+        }
+        .role-selection-heading {
+          font-size: 70px;
+        }
+        .role-selection-btns {
+          display: flex;
+          gap: 32px;
+        }
+        .role-btn {
+          background: #000;
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 32px 48px;
+          font-size: 18px;
+          cursor: pointer;
+          margin-bottom: 0;
+          transition: background 0.2s, color 0.2s;
+        }
+        @media (max-width: 700px) {
+          .role-selection-heading {
+            font-size: 36px;
+            margin-bottom: 48px;
+          }
+          .role-selection-btns {
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            align-items: center;
+          }
+          .role-btn {
+            width: 100%;
+            max-width: 350px;
+            padding: 18px 0;
+            font-size: 16px;
+            margin-bottom: 0;
+          }
+        }
+        @media (max-width: 400px) {
+          .role-selection-heading {
+            font-size: 24px;
+          }
+          .role-btn {
+            font-size: 14px;
+            padding: 12px 0;
+          }
+        }
+        /* Modal responsiveness */
+        @media (max-width: 500px) {
+          .role-selection-modal {
+            min-width: 90vw !important;
+            padding: 1rem 0.5rem !important;
+          }
+        }
       `}</style>
     </>
   );
 }
+export default RoleSelection;

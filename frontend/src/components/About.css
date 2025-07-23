@@ -80,10 +80,9 @@
 
 .developer-cards {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
-  min-width: 500px;
   margin: 0 auto;
 }
 
@@ -91,6 +90,9 @@
   background: linear-gradient(145deg, #f9faff, #e6f0ff);
   border-radius: 20px;
   width: 220px;
+  min-width: 160px;
+  max-width: 90vw;
+  flex: 1 1 180px;
   padding: 30px 25px;
   box-shadow: 6px 6px 10px rgba(163, 177, 198, 0.6),
     -6px -6px 10px rgba(255, 255, 255, 0.8);
@@ -98,6 +100,7 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .dev-card:hover {
@@ -163,11 +166,26 @@
   }
 }
 
+@media (max-width: 900px) {
+  .developer-cards {
+    gap: 20px;
+  }
+  .dev-card {
+    width: 180px;
+    padding: 20px 10px;
+  }
+}
+
 @media (max-width: 600px) {
   .developer-cards {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .dev-card {
+    width: 70vw;
+    min-width: 0;
+    padding: 32px 6vw 32px 6vw;
+    min-height: 220px;
   }
 }
