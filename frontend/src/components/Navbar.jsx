@@ -3,13 +3,12 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import pnLogo from "../assets/pn_logo.png";
 
 const Logo = () => (
-  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+  <div style={{ marginRight: 100 }}>
     <span
       style={{
         fontWeight: 800,
         fontSize: 24,
         color: "#0a192f",
-        letterSpacing: 1,
         fontFamily: "Raleway, sans-serif",
         fontStyle: "normal",
       }}
@@ -89,6 +88,17 @@ const Navbar = () => {
             >
               About
             </Link>
+            {/* Mobile button inside hamburger */}
+            <button
+              className="navbar-btn navbar-btn-mobile"
+              onClick={() => navigate(loggedIn ? "/dashboard" : "/login")}
+              type="button"
+            >
+              {loggedIn ? "Dashboard" : "Login / Register"}
+            </button>
+          </div>
+          {/* Desktop button */}
+          <div className="navbar-btn-desktop">
             {loggedIn ? (
               <button
                 className="navbar-btn"
@@ -111,11 +121,11 @@ const Navbar = () => {
       </nav>
       <style>{`
         .navbar-container {
+          justify-content: space-between;
           max-width: 1200px;
           margin: 0 auto;
           display: flex;
           align-items: center;
-          justify-content: space-between;
           padding: 20px 32px 12px 32px;
           position: relative;
         }
@@ -205,13 +215,41 @@ const Navbar = () => {
           .navbar-links.open {
             display: flex;
           }
-          .navbar-links a, .navbar-btn {
+          .navbar-links a {
             width: 100%;
             padding: 14px 24px;
             font-size: 18px;
             border-radius: 0;
             margin: 0;
             text-align: left;
+          }
+          .navbar-btn-desktop {
+            display: none;
+          }
+          .navbar-links.open::after {
+            content: '';
+          }
+          .navbar-links.open .navbar-btn-mobile {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 18px;
+            border-radius: 0;
+            margin: 0;
+            text-align: left;
+            background: #0078FF;
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            font-family: Poppins, Arial, sans-serif;
+            box-shadow: 0 2px 8px rgba(0,120,255,0.08);
+            cursor: pointer;
+            transition: background 0.2s;
+          }
+        }
+        @media (min-width: 769px) {
+          .navbar-btn-mobile {
+            display: none !important;
           }
         }
         @media (max-width: 480px) {
