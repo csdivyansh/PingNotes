@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import pnLogo from "../assets/pn_logo.png";
 
 const Logo = () => (
-  <div style={{ marginRight: 100 }}>
+  <div>
     <span
       style={{
         fontWeight: 800,
