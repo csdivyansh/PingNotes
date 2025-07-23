@@ -1,29 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import pnLogo from "../assets/pn_logo.png";
 import Navbar from "./Navbar";
 import Footer from "./Footer.jsx";
-// You can replace this with a logo SVG or image if available
-const Logo = () => (
-  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-    <span
-      style={{
-        fontWeight: 800,
-        fontSize: 24,
-        color: "#0a192f",
-        letterSpacing: 1,
-        fontFamily: "Raleway, sans-serif",
-        fontStyle: "normal",
-      }}
-    >
-      Pingnotes
-    </span>
-  </div>
-);
 
 const Home = () => {
-  const navigate = useNavigate();
   const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
@@ -38,6 +20,9 @@ const Home = () => {
           fontFamily: "Poppins, Arial, sans-serif",
           background: "#f9fbfd",
           minHeight: "100vh",
+          width: "100vw",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Navbar />
@@ -55,14 +40,25 @@ const Home = () => {
             🚀 Welcome!
           </div>
         )}
-        <section style={{ alignItems: "center", textAlign: "center" }}>
+        <section
+          style={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            padding: "20px",
+            boxSizing: "border-box",
+          }}
+        >
           <motion.img
             src={pnLogo}
             alt="PingNotes Logo"
             style={{
-              width: 200,
-              height: 200,
+              width: "clamp(120px, 25vw, 200px)",
+              height: "clamp(120px, 25vw, 200px)",
               filter: "drop-shadow(0 0 32px #0078FF55)",
+              marginTop: "20px",
             }}
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -73,7 +69,7 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             style={{
-              fontSize: 72,
+              fontSize: "clamp(40px, 10vw, 72px)",
               fontWeight: 800,
               color: "#0078FF",
               letterSpacing: 2,
@@ -88,7 +84,7 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
             style={{
-              fontSize: 30,
+              fontSize: "clamp(20px, 5vw, 30px)",
               fontWeight: 700,
               color: "#0a192f",
               margin: "12px 0 0 0",
@@ -103,11 +99,12 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
             style={{
-              fontSize: 18,
+              fontSize: "clamp(16px, 3vw, 18px)",
               color: "#222",
               margin: "20px auto 0 auto",
               maxWidth: 700,
               fontWeight: 400,
+              padding: "0 15px",
             }}
           >
             Organise, search, and access your notes with ease. Pingnotes helps
@@ -130,26 +127,22 @@ const Home = () => {
                 padding: "16px 48px",
                 borderRadius: 12,
                 fontWeight: 700,
-                fontSize: 22,
+                fontSize: "clamp(18px, 4vw, 22px)",
                 textDecoration: "none",
                 boxShadow: "0 4px 16px rgba(0,120,255,0.10)",
               }}
             >
-              Get Started <span style={{ fontSize: 26, marginLeft: 8 }}>→</span>
+              Get Started{" "}
+              <span
+                style={{ fontSize: "clamp(20px, 5vw, 26px)", marginLeft: 8 }}
+              >
+                →
+              </span>
             </Link>
           </motion.div>
         </section>
+        <Footer />
       </div>
-      <Footer className="fixed-footer" />
-      <style>{`
-        .fixed-footer {
-          position: fixed;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          z-index: 100;
-        }
-      `}</style>
     </>
   );
 };

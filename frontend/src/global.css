@@ -31,7 +31,7 @@ a,
 .btn-primary,
 .btn-secondary,
 .btn-danger {
-  font-family: "Raleway", sans-serif !important;
+  font-family: "Raleway", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -45,7 +45,7 @@ a,
 footer {
   width: 100%;
   padding: 1rem;
-  font-family: "Raleway", sans-serif !important;
+  font-family: "Raleway", sans-serif;
   font-weight: 600;
   font-size: large;
   bottom: 0;
