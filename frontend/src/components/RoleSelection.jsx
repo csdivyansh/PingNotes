@@ -149,13 +149,13 @@ function RoleSelection() {
       >
         <h2
           className="role-selection-heading"
-          style={{ marginBottom: 100, fontSize: 70 }}
+          style={{ marginBottom: 70, fontSize: 50, textAlign: "center" }}
         >
-          You are a......
+          You are a/an......
         </h2>
         <div
           className="role-selection-btns"
-          style={{ display: "flex", gap: 32 }}
+          style={{ display: "flex", gap: 30 }}
         >
           {roles.map((role) => (
             <button
