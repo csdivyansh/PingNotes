@@ -12,6 +12,7 @@ import {
   emptyTrash,
   shareFile,
   deleteAllFiles, // <-- add this import
+  getFileSummary, // <-- add this import
 } from "../controllers/file/file.controller.js";
 
 const router = express.Router();
@@ -50,5 +51,6 @@ router.get("/:id", getFileById);
 router.delete("/:id", deleteFile);
 router.get("/shared/group/:groupId", getFilesSharedWithGroup);
 router.post("/:id/share", shareFile);
+router.get("/:id/summary", getFileSummary);
 
 export default router;

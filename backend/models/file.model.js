@@ -29,6 +29,7 @@ const fileSchema = new mongoose.Schema({
   },
   shared_with_groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
   created_at: { type: Date, default: Date.now },
+  summary: { type: String, default: "" },
 });
 
 export default mongoose.model("File", fileSchema);

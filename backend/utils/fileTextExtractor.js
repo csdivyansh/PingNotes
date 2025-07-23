@@ -83,6 +83,7 @@ async function extractTextFromImage(filePath) {
   return text;
 }
 
+// Supported: PDF, DOCX, TXT, and images (including .webp)
 export async function extractTextFromFile(filePath, mimetype) {
   if (mimetype === "application/pdf") {
     return await extractTextFromPDF(filePath);

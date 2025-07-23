@@ -90,3 +90,25 @@ export const getUserDriveFiles = async (userAccessToken) => {
     throw error;
   }
 };
+
+/**
+ * Download a file from Google Drive to a local path.
+ * @param {string} fileId - The Google Drive file ID.
+ * @param {string} userAccessToken - The user's Google access token.
+ * @param {string} destPath - The local path to save the file.
+ * @returns {Promise<string>} - Resolves to the local file path.
+ */
+export const downloadFileFromDrive = async (fileId, userAccessToken, destPath) => {
+  const auth = getUserAuth(userAccessToken);
+  const drive = google.drive({ version: "v3", auth });
+  const dest = fs.createWriteStream(destPath);
+  return new Promise((resolve, reject) => {
+    drive.files.get({ fileId, alt: "media" }, { responseType: "stream" }, (err, res) => {
+      if (err) return reject(err);
+      res.data
+        .on("end", () => resolve(destPath))
+        .on("error", (err) => reject(err))
+        .pipe(dest);
+    });
+  });
+};

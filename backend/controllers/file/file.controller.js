@@ -11,6 +11,10 @@ import { extractTextFromFile } from "../../utils/fileTextExtractor.js";
 import { suggestSubjectFromText } from "../../utils/subjectSuggester.js";
 import mongoose from "mongoose";
 import Subject from "../../models/subject.model.js";
+import { generateSummary } from "../../utils/summaryGenerator.js";
+import { downloadFileFromDrive } from "../../services/googleDrive.service.js";
+import os from "os";
+import path from "path";
 
 export const uploadFiles = async (req, res) => {
   if (!req.files || req.files.length === 0)
@@ -461,5 +465,71 @@ export const deleteAllFiles = async (req, res) => {
   } catch (error) {
     console.error("Delete all files error:", error);
     res.status(500).json({ message: "Error deleting all files" });
+  }
+};
+
+/**
+ * GET /api/files/:id/summary
+ * Returns an AI-generated summary for the file (using Gemini)
+ */
+export const getFileSummary = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const file = await File.findById(id);
+    if (!file) return res.status(404).json({ message: "File not found" });
+    if (file.summary && file.summary.length > 0) {
+      return res.json({ summary: file.summary });
+    }
+    // Download or access the file
+    let filePath = file.path;
+    let tempFilePath = null;
+    if (!filePath && file.drive_file_id) {
+      // Find user or teacher for access token
+      let userAccessToken = null;
+      if (file.uploaded_by_role === "User") {
+        const user = await User.findById(file.uploaded_by);
+        userAccessToken = user?.googleAccessToken;
+      } else if (file.uploaded_by_role === "Teacher") {
+        const teacher = await Teacher.findById(file.uploaded_by);
+        userAccessToken = teacher?.googleAccessToken;
+      }
+      if (!userAccessToken) {
+        return res
+          .status(401)
+          .json({ message: "No Google access token for file owner." });
+      }
+      // Download from Drive to temp file
+      tempFilePath = path.join(os.tmpdir(), `file-${file._id}-${Date.now()}`);
+      await downloadFileFromDrive(
+        file.drive_file_id,
+        userAccessToken,
+        tempFilePath
+      );
+      filePath = tempFilePath;
+    }
+    if (!filePath) {
+      return res
+        .status(400)
+        .json({ message: "File path not available for summary." });
+    }
+    // Extract text
+    const { extractTextFromFile } = await import(
+      "../../utils/fileTextExtractor.js"
+    );
+    const text = await extractTextFromFile(filePath, file.mimetype);
+    // Generate summary
+    const summary = await generateSummary(text);
+    file.summary = summary;
+    await file.save();
+    // Clean up temp file if used
+    if (tempFilePath) {
+      try {
+        fs.unlinkSync(tempFilePath);
+      } catch (e) {}
+    }
+    res.json({ summary });
+  } catch (err) {
+    console.error("AI summary error:", err);
+    res.status(500).json({ message: "Failed to generate summary." });
   }
 };

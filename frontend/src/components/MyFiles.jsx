@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../services/api";
-import { FaDownload, FaTrash, FaShareAlt } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 import DashNav from "./DashNav.jsx";
+import { useNavigate } from "react-router-dom";
 
 const MyFiles = () => {
   const [files, setFiles] = useState([]);
@@ -10,14 +11,14 @@ const MyFiles = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [fileToShare, setFileToShare] = useState(null);
+  const [menuOpenId, setMenuOpenId] = useState(null);
+  const [summaryVisible, setSummaryVisible] = useState({});
   // Placeholder: friends list and selected friends
-  const [friends, setFriends] = useState([
-    { _id: "1", name: "Alice" },
-    { _id: "2", name: "Bob" },
-    // ...fetch from backend in real impl
-  ]);
+  const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [friendEmail, setFriendEmail] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFiles();
@@ -97,6 +98,16 @@ const MyFiles = () => {
     closeShareModal();
   };
 
+  const handleMenuToggle = (fileId) => {
+    setMenuOpenId((prev) => (prev === fileId ? null : fileId));
+  };
+
+  // Placeholder for AI summary fetching logic
+  const getAISummary = (file) => {
+    // TODO: Replace with real AI summary fetching logic
+    return "This is an AI-generated summary of the file. (Placeholder)";
+  };
+
   return (
     <>
       <DashNav />
@@ -116,45 +127,144 @@ const MyFiles = () => {
         ) : (
           <div className="files-list" style={{ flexDirection: "column" }}>
             {files.map((file) => (
-              <div key={file._id} className="file-item">
-                <span className="file-name">{file.name}</span>
+              <div
+                key={file._id}
+                className="file-item"
+                style={{
+                  position: "relative",
+                  marginBottom: 24,
+                  padding: 16,
+                  border: "1px solid #eee",
+                  borderRadius: 8,
+                }}
+              >
+                <span className="file-name" style={{ fontWeight: 600 }}>
+                  {file.name}
+                </span>
                 <span
-                  style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}
+                  style={{ color: "#64748b", fontSize: 14, marginLeft: 12 }}
                 >
                   {file.mimetype}
                 </span>
                 <span
-                  style={{ color: "#64748b", fontSize: 14, marginRight: 16 }}
+                  style={{ color: "#64748b", fontSize: 14, marginLeft: 12 }}
                 >
                   {(file.size / 1024).toFixed(1)} KB
                 </span>
-                <a
-                  href={file.drive_file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="view-file-btn"
-                  style={{ marginRight: 8 }}
-                >
-                  <FaDownload />
-                </a>
+                {/* 3-dots menu */}
                 <button
-                  onClick={() => handleDelete(file._id)}
-                  disabled={deletingId === file._id}
-                  className="btn-danger"
-                  style={{ minWidth: 36, minHeight: 36 }}
+                  className="file-menu-btn"
+                  style={{
+                    position: "absolute",
+                    top: 16,
+                    right: 16,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: 20,
+                  }}
+                  onClick={() => handleMenuToggle(file._id)}
+                  aria-label="File actions"
                 >
-                  {deletingId === file._id ? "" : <FaTrash />}{" "}
-                  {deletingId === file._id ? "Deleting..." : ""}
+                  <FaEllipsisV />
                 </button>
-                <button
-                  onClick={() => openShareModal(file)}
-                  className="view-file-btn"
-                  style={{ minWidth: 36, minHeight: 36, marginLeft: 8 }}
-                  title="Share File"
-                >
-                  <FaShareAlt />
-                </button>
+                {menuOpenId === file._id && (
+                  <div
+                    className="file-menu-dropdown"
+                    style={{
+                      position: "absolute",
+                      top: 44,
+                      right: 16,
+                      background: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: 8,
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                      zIndex: 10,
+                      minWidth: 140,
+                    }}
+                  >
+                    <a
+                      href={file.drive_file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="file-menu-item"
+                      style={{
+                        display: "block",
+                        padding: "10px 18px",
+                        color: "#222",
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #f1f1f1",
+                      }}
+                    >
+                      View
+                    </a>
+                    <button
+                      onClick={() => handleDelete(file._id)}
+                      disabled={deletingId === file._id}
+                      className="file-menu-item"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "10px 18px",
+                        color: "#ef4444",
+                        background: "none",
+                        border: "none",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #f1f1f1",
+                      }}
+                    >
+                      {deletingId === file._id ? "Deleting..." : "Delete"}
+                    </button>
+                    <button
+                      onClick={() => openShareModal(file)}
+                      className="file-menu-item"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "10px 18px",
+                        color: "#2563eb",
+                        background: "none",
+                        border: "none",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #f1f1f1",
+                      }}
+                    >
+                      Share
+                    </button>
+                    <button
+                      onClick={() => navigate(`/files/${file._id}/summary`)}
+                      className="file-menu-item"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "10px 18px",
+                        color: "#2563eb",
+                        background: "none",
+                        border: "none",
+                        textAlign: "left",
+                        cursor: "pointer",
+                      }}
+                    >
+                      View AI Summary
+                    </button>
+                  </div>
+                )}
+                {/* AI Summary shown only if toggled */}
+                {summaryVisible[file._id] && (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      color: "#2563eb",
+                      fontSize: 15,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {getAISummary(file)}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -225,6 +335,15 @@ const MyFiles = () => {
           </div>
         )}
       </div>
+      <style>{`
+        .file-menu-btn:focus + .file-menu-dropdown,
+        .file-menu-dropdown:hover {
+          display: block;
+        }
+        .file-menu-dropdown {
+          display: block;
+        }
+      `}</style>
     </>
   );
 };
