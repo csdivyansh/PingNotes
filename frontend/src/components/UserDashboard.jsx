@@ -5,6 +5,7 @@ import "./UserDashboard.css";
 import { useNavigate, Link } from "react-router-dom";
 import DashNav from "./DashNav.jsx";
 import { FaDownload, FaTrash, FaPaperclip, FaShareAlt } from "react-icons/fa";
+import { useGlobalFileUpload } from "./GlobalFileUploadContext";
 
 const UserDashboard = () => {
   const [subjects, setSubjects] = useState([]);
@@ -36,6 +37,7 @@ const UserDashboard = () => {
   ]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [friendEmail, setFriendEmail] = useState("");
+  const { openUploadModal } = useGlobalFileUpload();
 
   useEffect(() => {
     fetchSubjects();
@@ -286,6 +288,14 @@ const UserDashboard = () => {
                 onClick={() => setShowAddSubject(true)}
               >
                 + Add Subject
+              </button>
+              {/* Mobile Upload File Button */}
+              <button
+                className="upload-file-btn-mobile"
+                onClick={openUploadModal}
+                type="button"
+              >
+                Upload File
               </button>
               {needsGoogleDriveAuth && (
                 <button
@@ -745,6 +755,28 @@ const UserDashboard = () => {
           </div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .upload-file-btn-mobile {
+            display: inline-block;
+            background: #0078FF;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            margin-left: 10px;
+            font-size: 1rem;
+            transition: background 0.2s;
+          }
+        }
+        @media (min-width: 769px) {
+          .upload-file-btn-mobile {
+            display: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 };

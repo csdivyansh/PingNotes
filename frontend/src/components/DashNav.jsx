@@ -3,13 +3,12 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGlobalFileUpload } from "./GlobalFileUploadContext";
 
 const Logo = () => (
-  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+  <div>
     <span
       style={{
         fontWeight: 800,
         fontSize: 24,
         color: "#0a192f",
-        letterSpacing: 1,
         fontFamily: "Raleway, sans-serif",
         fontStyle: "normal",
       }}
@@ -114,14 +113,23 @@ const DashNav = () => {
             >
               Settings
             </Link>
+            {/* Mobile Upload Button */}
             <button
-              className="dashnav-btn"
+              className="dashnav-btn dashnav-btn-mobile"
               onClick={openUploadModal}
               type="button"
             >
               Upload File
             </button>
           </div>
+          {/* Desktop Upload Button */}
+          <button
+            className="dashnav-btn dashnav-btn-desktop"
+            onClick={openUploadModal}
+            type="button"
+          >
+            Upload File
+          </button>
         </div>
       </nav>
       <div style={{ height: 72 }} />
@@ -225,6 +233,17 @@ const DashNav = () => {
             border-radius: 0;
             margin: 0;
             text-align: left;
+          }
+          .dashnav-btn-desktop {
+            display: none;
+          }
+          .dashnav-btn-mobile {
+            display: block;
+          }
+        }
+        @media (min-width: 769px) {
+          .dashnav-btn-mobile {
+            display: none !important;
           }
         }
         @media (max-width: 480px) {
