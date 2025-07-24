@@ -94,7 +94,7 @@ const Navbar = () => {
               onClick={() => navigate(loggedIn ? "/dashboard" : "/login")}
               type="button"
             >
-              {loggedIn ? "Dashboard" : "Login"}
+              {loggedIn ? "Dashboard" : "Login / Register"}
             </button>
           </div>
           {/* Desktop button */}
@@ -113,7 +113,7 @@ const Navbar = () => {
                 onClick={() => navigate("/login")}
                 type="button"
               >
-                Login / Register
+                Login
               </button>
             )}
           </div>
