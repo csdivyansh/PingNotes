@@ -15,6 +15,7 @@ import { generateSummary } from "../../utils/summaryGenerator.js";
 import { downloadFileFromDrive } from "../../services/googleDrive.service.js";
 import os from "os";
 import path from "path";
+import { google } from "googleapis";
 
 export const uploadFiles = async (req, res) => {
   if (!req.files || req.files.length === 0)
@@ -106,7 +107,7 @@ export const uploadFiles = async (req, res) => {
           mimetype: file.mimetype,
           size: file.size,
           drive_file_id: driveFile.id,
-          drive_file_url: driveFile.webContentLink, // Use direct download link
+          drive_file_url: driveFile.webViewLink, // Use view link for in-browser viewing
           uploaded_by: req.user.id,
           uploaded_by_role:
             req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1),
@@ -531,5 +532,42 @@ export const getFileSummary = async (req, res) => {
   } catch (err) {
     console.error("AI summary error:", err);
     res.status(500).json({ message: "Failed to generate summary." });
+  }
+};
+
+// Utility endpoint: Update all files to use webViewLink instead of webContentLink
+export const updateAllFilesToWebViewLink = async (req, res) => {
+  try {
+    const files = await File.find({ drive_file_id: { $exists: true, $ne: null } });
+    let updatedCount = 0;
+    for (const file of files) {
+      // Only update if the URL is a webContentLink (download link)
+      if (file.drive_file_url && file.drive_file_url.includes("/uc?export=download")) {
+        // Get the user's access token
+        let userAccessToken = null;
+        if (file.uploaded_by_role === "User") {
+          const user = await User.findById(file.uploaded_by);
+          userAccessToken = user?.googleAccessToken;
+        } else if (file.uploaded_by_role === "Teacher") {
+          const teacher = await Teacher.findById(file.uploaded_by);
+          userAccessToken = teacher?.googleAccessToken;
+        }
+        if (!userAccessToken) continue;
+        // Fetch file info from Google Drive
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: userAccessToken });
+        const drive = google.drive({ version: "v3", auth });
+        const driveRes = await drive.files.get({ fileId: file.drive_file_id, fields: "webViewLink" });
+        if (driveRes.data.webViewLink) {
+          file.drive_file_url = driveRes.data.webViewLink;
+          await file.save();
+          updatedCount++;
+        }
+      }
+    }
+    res.json({ message: `Updated ${updatedCount} files to use webViewLink.` });
+  } catch (err) {
+    console.error("Error updating files to webViewLink:", err);
+    res.status(500).json({ message: "Failed to update files.", error: err.message });
   }
 };

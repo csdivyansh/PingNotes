@@ -68,28 +68,59 @@ const subjectsData = [
         name: "Calculus",
         description: "Introduction to differential and integral calculus",
         dummyFiles: [
-          { name: "Calculus_Chapter1.pdf", mimetype: "application/pdf", size: 2048576 },
-          { name: "Calculus_Exercises.pdf", mimetype: "application/pdf", size: 1536000 },
-          { name: "Calculus_Notes.docx", mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", size: 512000 }
-        ]
+          {
+            name: "Calculus_Chapter1.pdf",
+            mimetype: "application/pdf",
+            size: 2048576,
+          },
+          {
+            name: "Calculus_Exercises.pdf",
+            mimetype: "application/pdf",
+            size: 1536000,
+          },
+          {
+            name: "Calculus_Notes.docx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            size: 512000,
+          },
+        ],
       },
       {
         name: "Linear Algebra",
         description: "Vectors, matrices, and linear transformations",
         dummyFiles: [
-          { name: "Linear_Algebra_Notes.pdf", mimetype: "application/pdf", size: 3072000 },
-          { name: "Matrix_Operations.pptx", mimetype: "application/vnd.openxmlformats-officedocument.presentationml.presentation", size: 1024000 }
-        ]
+          {
+            name: "Linear_Algebra_Notes.pdf",
+            mimetype: "application/pdf",
+            size: 3072000,
+          },
+          {
+            name: "Matrix_Operations.pptx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            size: 1024000,
+          },
+        ],
       },
       {
         name: "Statistics",
         description: "Probability and statistical analysis",
         dummyFiles: [
-          { name: "Statistics_Handbook.pdf", mimetype: "application/pdf", size: 4096000 },
-          { name: "Probability_Examples.xlsx", mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", size: 768000 }
-        ]
-      }
-    ]
+          {
+            name: "Statistics_Handbook.pdf",
+            mimetype: "application/pdf",
+            size: 4096000,
+          },
+          {
+            name: "Probability_Examples.xlsx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            size: 768000,
+          },
+        ],
+      },
+    ],
   },
   {
     name: "Physics",
@@ -99,20 +130,37 @@ const subjectsData = [
         name: "Mechanics",
         description: "Classical mechanics and motion",
         dummyFiles: [
-          { name: "Newton_Laws.pdf", mimetype: "application/pdf", size: 2560000 },
-          { name: "Mechanics_Lab_Report.pdf", mimetype: "application/pdf", size: 1792000 },
-          { name: "Motion_Simulation.mp4", mimetype: "video/mp4", size: 15728640 }
-        ]
+          {
+            name: "Newton_Laws.pdf",
+            mimetype: "application/pdf",
+            size: 2560000,
+          },
+          {
+            name: "Mechanics_Lab_Report.pdf",
+            mimetype: "application/pdf",
+            size: 1792000,
+          },
+          {
+            name: "Motion_Simulation.mp4",
+            mimetype: "video/mp4",
+            size: 15728640,
+          },
+        ],
       },
       {
         name: "Electromagnetism",
         description: "Electric and magnetic fields",
         dummyFiles: [
           { name: "EM_Theory.pdf", mimetype: "application/pdf", size: 3584000 },
-          { name: "Circuit_Diagrams.pptx", mimetype: "application/vnd.openxmlformats-officedocument.presentationml.presentation", size: 2048000 }
-        ]
-      }
-    ]
+          {
+            name: "Circuit_Diagrams.pptx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            size: 2048000,
+          },
+        ],
+      },
+    ],
   },
   {
     name: "Chemistry",
@@ -122,20 +170,41 @@ const subjectsData = [
         name: "Organic Chemistry",
         description: "Carbon compounds and reactions",
         dummyFiles: [
-          { name: "Organic_Reactions.pdf", mimetype: "application/pdf", size: 5120000 },
-          { name: "Molecular_Structures.pptx", mimetype: "application/vnd.openxmlformats-officedocument.presentationml.presentation", size: 3072000 },
-          { name: "Lab_Safety_Guidelines.pdf", mimetype: "application/pdf", size: 1024000 }
-        ]
+          {
+            name: "Organic_Reactions.pdf",
+            mimetype: "application/pdf",
+            size: 5120000,
+          },
+          {
+            name: "Molecular_Structures.pptx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            size: 3072000,
+          },
+          {
+            name: "Lab_Safety_Guidelines.pdf",
+            mimetype: "application/pdf",
+            size: 1024000,
+          },
+        ],
       },
       {
         name: "Inorganic Chemistry",
         description: "Non-carbon compounds and reactions",
         dummyFiles: [
-          { name: "Inorganic_Notes.pdf", mimetype: "application/pdf", size: 4096000 },
-          { name: "Periodic_Table_Reference.pdf", mimetype: "application/pdf", size: 1536000 }
-        ]
-      }
-    ]
+          {
+            name: "Inorganic_Notes.pdf",
+            mimetype: "application/pdf",
+            size: 4096000,
+          },
+          {
+            name: "Periodic_Table_Reference.pdf",
+            mimetype: "application/pdf",
+            size: 1536000,
+          },
+        ],
+      },
+    ],
   },
   {
     name: "Computer Science",
@@ -145,29 +214,61 @@ const subjectsData = [
         name: "Programming Fundamentals",
         description: "Introduction to programming concepts",
         dummyFiles: [
-          { name: "Python_Basics.pdf", mimetype: "application/pdf", size: 3584000 },
-          { name: "Code_Examples.zip", mimetype: "application/zip", size: 2048000 },
-          { name: "Programming_Assignment.pdf", mimetype: "application/pdf", size: 1280000 }
-        ]
+          {
+            name: "Python_Basics.pdf",
+            mimetype: "application/pdf",
+            size: 3584000,
+          },
+          {
+            name: "Code_Examples.zip",
+            mimetype: "application/zip",
+            size: 2048000,
+          },
+          {
+            name: "Programming_Assignment.pdf",
+            mimetype: "application/pdf",
+            size: 1280000,
+          },
+        ],
       },
       {
         name: "Data Structures",
         description: "Arrays, linked lists, and trees",
         dummyFiles: [
-          { name: "Data_Structures_Guide.pdf", mimetype: "application/pdf", size: 6144000 },
-          { name: "Algorithm_Complexity.pdf", mimetype: "application/pdf", size: 2560000 }
-        ]
+          {
+            name: "Data_Structures_Guide.pdf",
+            mimetype: "application/pdf",
+            size: 6144000,
+          },
+          {
+            name: "Algorithm_Complexity.pdf",
+            mimetype: "application/pdf",
+            size: 2560000,
+          },
+        ],
       },
       {
         name: "Web Development",
         description: "HTML, CSS, and JavaScript",
         dummyFiles: [
-          { name: "HTML_CSS_Tutorial.pdf", mimetype: "application/pdf", size: 4096000 },
-          { name: "JavaScript_Examples.js", mimetype: "application/javascript", size: 512000 },
-          { name: "Web_Project_Template.zip", mimetype: "application/zip", size: 3072000 }
-        ]
-      }
-    ]
+          {
+            name: "HTML_CSS_Tutorial.pdf",
+            mimetype: "application/pdf",
+            size: 4096000,
+          },
+          {
+            name: "JavaScript_Examples.js",
+            mimetype: "application/javascript",
+            size: 512000,
+          },
+          {
+            name: "Web_Project_Template.zip",
+            mimetype: "application/zip",
+            size: 3072000,
+          },
+        ],
+      },
+    ],
   },
   {
     name: "English Literature",
@@ -177,21 +278,42 @@ const subjectsData = [
         name: "Shakespeare",
         description: "Works of William Shakespeare",
         dummyFiles: [
-          { name: "Hamlet_Analysis.pdf", mimetype: "application/pdf", size: 2560000 },
-          { name: "Macbeth_Summary.pdf", mimetype: "application/pdf", size: 1792000 },
-          { name: "Shakespeare_Quotes.docx", mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", size: 768000 }
-        ]
+          {
+            name: "Hamlet_Analysis.pdf",
+            mimetype: "application/pdf",
+            size: 2560000,
+          },
+          {
+            name: "Macbeth_Summary.pdf",
+            mimetype: "application/pdf",
+            size: 1792000,
+          },
+          {
+            name: "Shakespeare_Quotes.docx",
+            mimetype:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            size: 768000,
+          },
+        ],
       },
       {
         name: "Modern Literature",
         description: "Contemporary literary works",
         dummyFiles: [
-          { name: "Modern_Novels_List.pdf", mimetype: "application/pdf", size: 1536000 },
-          { name: "Literary_Criticism.pdf", mimetype: "application/pdf", size: 3072000 }
-        ]
-      }
-    ]
-  }
+          {
+            name: "Modern_Novels_List.pdf",
+            mimetype: "application/pdf",
+            size: 1536000,
+          },
+          {
+            name: "Literary_Criticism.pdf",
+            mimetype: "application/pdf",
+            size: 3072000,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 try {
@@ -219,14 +341,14 @@ try {
 
   console.log("📚 Creating subjects with topics and files...");
   const createdSubjects = [];
-  
+
   for (const subjectData of subjectsData) {
     // Create subject
     const subject = new Subject({
       name: subjectData.name,
       subject_code: subjectData.subject_code,
       created_by: insertedTeachers[0]._id, // Assign to first teacher
-      created_by_role: "Teacher"
+      created_by_role: "Teacher",
     });
 
     // Add topics to subject
@@ -234,9 +356,9 @@ try {
       const topic = {
         name: topicData.name,
         description: topicData.description,
-        files: []
+        files: [],
       };
-      
+
       // Create dummy files for this topic
       for (const fileData of topicData.dummyFiles) {
         try {
@@ -245,45 +367,55 @@ try {
             name: fileData.name,
             mimetype: fileData.mimetype,
             size: fileData.size,
-            drive_file_id: `dummy_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            drive_file_url: `https://drive.google.com/file/d/dummy_${Date.now()}_${Math.random().toString(36).substr(2, 9)}/view`,
+            drive_file_id: `dummy_${Date.now()}_${Math.random()
+              .toString(36)
+              .substr(2, 9)}`,
+            drive_file_url: `https://drive.google.com/file/d/dummy_${Date.now()}_${Math.random()
+              .toString(36)
+              .substr(2, 9)}/view`, // This is already the webViewLink format
             uploaded_by: insertedTeachers[0]._id,
             uploaded_by_role: "Teacher",
-            linked_subject: subject._id
+            linked_subject: subject._id,
           });
-          
+
           await file.save();
-          
+
           // Add file ID to topic
           topic.files.push(file._id);
-          
-          console.log(`✅ Created file: ${fileData.name} for topic: ${topicData.name}`);
+
+          console.log(
+            `✅ Created file: ${fileData.name} for topic: ${topicData.name}`
+          );
         } catch (error) {
-          console.error(`❌ Error creating file ${fileData.name}:`, error.message);
+          console.error(
+            `❌ Error creating file ${fileData.name}:`,
+            error.message
+          );
         }
       }
-      
+
       // Add topic to subject
       subject.topics.push(topic);
     }
-    
+
     await subject.save();
     createdSubjects.push(subject);
-    console.log(`✅ Created subject: ${subjectData.name} with ${subjectData.topics.length} topics`);
+    console.log(
+      `✅ Created subject: ${subjectData.name} with ${subjectData.topics.length} topics`
+    );
   }
 
   console.log("\n🎉 Seeding completed successfully!");
   console.log(`✔️ Users: ${insertedUsers.length}`);
   console.log(`✔️ Teachers: ${insertedTeachers.length}`);
   console.log(`✔️ Subjects: ${createdSubjects.length}`);
-  
+
   // Count total files
   const totalFiles = await File.countDocuments();
   console.log(`✔️ Total Files: ${totalFiles}`);
-
 } catch (err) {
   console.error("❌ Seeding failed:", err);
 } finally {
   await mongoose.disconnect();
   console.log("🔌 Disconnected from database");
-} 
+}

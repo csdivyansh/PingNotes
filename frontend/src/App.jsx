@@ -17,6 +17,7 @@ import TrashPage from "./components/TrashPage";
 import MyGroups from "./components/MyGroups";
 import GroupDetail from "./components/GroupDetail";
 import FileSummary from "./components/FileSummary";
+import FileViewer from "./components/FileViewer";
 import { GlobalFileUploadProvider } from "./components/GlobalFileUploadContext";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
             <Route path="trash" element={<TrashPage />} />
           </Route>
           <Route path="/files/:id/summary" element={<FileSummary />} />
+          <Route path="/files/:id/view" element={<FileViewer />} />
           <Route path="/login" element={<RoleSelection />} />
           <Route path="/auth/success" element={<AuthSuccess />} />
           <Route path="/about" element={<About />} />

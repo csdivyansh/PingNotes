@@ -13,6 +13,7 @@ import {
   shareFile,
   deleteAllFiles, // <-- add this import
   getFileSummary, // <-- add this import
+  updateAllFilesToWebViewLink,
 } from "../controllers/file/file.controller.js";
 
 const router = express.Router();
@@ -52,5 +53,8 @@ router.delete("/:id", deleteFile);
 router.get("/shared/group/:groupId", getFilesSharedWithGroup);
 router.post("/:id/share", shareFile);
 router.get("/:id/summary", getFileSummary);
+
+// Admin utility: update all files to use webViewLink
+router.post("/update-all-to-webviewlink", updateAllFilesToWebViewLink);
 
 export default router;

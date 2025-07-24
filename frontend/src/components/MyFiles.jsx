@@ -186,22 +186,26 @@ const MyFiles = () => {
                       minWidth: 140,
                     }}
                   >
-                    <a
-                      href={file.drive_file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => {
+                        navigate(`/files/${file._id}/view`);
+                        setMenuOpenId(null);
+                      }}
                       className="file-menu-item"
                       style={{
                         display: "block",
+                        width: "100%",
                         padding: "10px 18px",
                         color: "#222",
-                        textDecoration: "none",
+                        background: "none",
+                        border: "none",
+                        textAlign: "left",
                         cursor: "pointer",
                         borderBottom: "1px solid #f1f1f1",
                       }}
                     >
                       View
-                    </a>
+                    </button>
                     <button
                       onClick={() => handleDelete(file._id)}
                       disabled={deletingId === file._id}
