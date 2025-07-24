@@ -471,7 +471,7 @@ const UserDashboard = () => {
                           setShowAddTopic(true);
                         }}
                       >
-                        + Add Topic
+                        +
                       </button>
                     </div>
 
