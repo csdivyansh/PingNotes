@@ -3,6 +3,7 @@ import apiService from "../services/api";
 import { FaEllipsisV } from "react-icons/fa";
 import DashNav from "./DashNav.jsx";
 import { useNavigate } from "react-router-dom";
+import FileSummary from "./FileSummary";
 
 const MyFiles = () => {
   const [files, setFiles] = useState([]);
@@ -13,6 +14,8 @@ const MyFiles = () => {
   const [fileToShare, setFileToShare] = useState(null);
   const [menuOpenId, setMenuOpenId] = useState(null);
   const [summaryVisible, setSummaryVisible] = useState({});
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [summaryFileId, setSummaryFileId] = useState(null);
   // Placeholder: friends list and selected friends
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
@@ -235,7 +238,11 @@ const MyFiles = () => {
                       Share
                     </button>
                     <button
-                      onClick={() => navigate(`/files/${file._id}/summary`)}
+                      onClick={() => {
+                        setSummaryFileId(file._id);
+                        setShowSummaryModal(true);
+                        setMenuOpenId(null);
+                      }}
                       className="file-menu-item"
                       style={{
                         display: "block",
@@ -333,6 +340,16 @@ const MyFiles = () => {
               </div>
             </div>
           </div>
+        )}
+        {/* Summary Modal */}
+        {showSummaryModal && summaryFileId && (
+          <FileSummary
+            fileId={summaryFileId}
+            onClose={() => {
+              setShowSummaryModal(false);
+              setSummaryFileId(null);
+            }}
+          />
         )}
       </div>
       <style>{`
