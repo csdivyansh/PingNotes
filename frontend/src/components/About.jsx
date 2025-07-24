@@ -106,7 +106,6 @@ const About = () => {
           <p>🚀 Built with ❤ for modern education.</p>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

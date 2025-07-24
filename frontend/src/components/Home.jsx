@@ -141,7 +141,6 @@ const Home = () => {
             </Link>
           </motion.div>
         </section>
-        <Footer />
       </div>
     </>
   );

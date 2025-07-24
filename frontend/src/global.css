@@ -42,14 +42,3 @@ a,
   box-sizing: border-box;
 }
 
-footer {
-  width: 100%;
-  padding: 1rem;
-  font-family: "Raleway", sans-serif;
-  font-weight: 600;
-  font-size: large;
-  bottom: 0;
-  text-align: center;
-  background: #000;
-  color: #fff;
-}
