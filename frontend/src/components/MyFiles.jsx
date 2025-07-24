@@ -134,6 +134,7 @@ const MyFiles = () => {
                 key={file._id}
                 className="file-item"
                 style={{
+                  marginRight: "10%",
                   position: "relative",
                   marginBottom: 24,
                   padding: 16,
@@ -150,7 +151,7 @@ const MyFiles = () => {
                   {file.mimetype}
                 </span>
                 <span
-                  style={{ color: "#64748b", fontSize: 14, marginLeft: 12 }}
+                  style={{ color: "#64748b", fontSize: 14, marginLeft: 12, marginRight: 30 }}
                 >
                   {(file.size / 1024).toFixed(1)} KB
                 </span>
@@ -259,21 +260,8 @@ const MyFiles = () => {
                         cursor: "pointer",
                       }}
                     >
-                      View AI Summary
+                      AI Summary
                     </button>
-                  </div>
-                )}
-                {/* AI Summary shown only if toggled */}
-                {summaryVisible[file._id] && (
-                  <div
-                    style={{
-                      marginTop: 8,
-                      color: "#2563eb",
-                      fontSize: 15,
-                      fontStyle: "italic",
-                    }}
-                  >
-                    {getAISummary(file)}
                   </div>
                 )}
               </div>
@@ -347,13 +335,43 @@ const MyFiles = () => {
         )}
         {/* Summary Modal */}
         {showSummaryModal && summaryFileId && (
-          <FileSummary
-            fileId={summaryFileId}
-            onClose={() => {
-              setShowSummaryModal(false);
-              setSummaryFileId(null);
+          <div
+            className="modal-overlay"
+            onClick={(e) => {
+              if (e.target.classList.contains("modal-overlay")) {
+                setShowSummaryModal(false);
+                setSummaryFileId(null);
+              }
             }}
-          />
+          >
+            <div style={{ maxWidth: 700, width: "95%", padding: 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: 8,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setShowSummaryModal(false);
+                    setSummaryFileId(null);
+                  }}
+                  style={{
+                    fontSize: 22,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  &times;
+                </button>
+              </div>
+              <div style={{ padding: 24 }}>
+                <FileSummary fileId={summaryFileId} />
+              </div>
+            </div>
+          </div>
         )}
       </div>
       <style>{`

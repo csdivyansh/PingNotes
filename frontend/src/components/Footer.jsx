@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="footer-container">
         {/* Logo and Tagline */}
         <div className="footer-section">
-          <h3>Ping Note</h3>
+          <h3>Pingnotes</h3>
           <p className="footer-tagline">
             Helping students stay organized and connected.
           </p>
@@ -35,7 +35,7 @@ const Footer = () => {
         {/* Contact Info */}
         <div className="footer-section">
           <h4 className="footer-heading">Contact</h4>
-          <p>Email: support@pingnote.com</p>
+          <p>Email: support@pingnotes.com</p>
           <p>Phone: +91 98765 43210</p>
         </div>
       </div>

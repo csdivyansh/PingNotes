@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import DashNav from "./DashNav.jsx";
 import apiService from "../services/api";
+import PropTypes from "prop-types";
 
-const FileSummary = () => {
-  const { id } = useParams();
+const FileSummary = ({ fileId }) => {
   const [file, setFile] = useState(null);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,12 +28,10 @@ const FileSummary = () => {
     const fetchSummary = async () => {
       setLoading(true);
       try {
-        // Fetch file details (including name)
         const files = await apiService.getMyFiles();
-        const found = files.find((f) => f._id === id);
+        const found = files.find((f) => f._id === fileId);
         setFile(found);
-        // Fetch/generate summary from backend
-        const res = await apiService.request(`/api/files/${id}/summary`);
+        const res = await apiService.request(`/api/files/${fileId}/summary`);
         setSummary(res.summary || "No summary available.");
         setError(null);
       } catch (err) {
@@ -43,8 +40,8 @@ const FileSummary = () => {
         setLoading(false);
       }
     };
-    fetchSummary();
-  }, [id]);
+    if (fileId) fetchSummary();
+  }, [fileId]);
 
   return (
     <>
@@ -109,13 +106,18 @@ const FileSummary = () => {
               </button>
             </h2>
             <div style={{ color: "#000", fontSize: 18, fontWeight: 400 }}>
-              {summary}
+              {/* If summary is trusted HTML, render as rich text. If not, sanitize before using dangerouslySetInnerHTML. */}
+              <div dangerouslySetInnerHTML={{ __html: summary }} />
             </div>
           </>
         )}
       </div>
     </>
   );
+};
+
+FileSummary.propTypes = {
+  fileId: PropTypes.string.isRequired,
 };
 
 export default FileSummary;

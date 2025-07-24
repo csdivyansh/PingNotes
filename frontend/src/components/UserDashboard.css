@@ -286,16 +286,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 5001;
 }
 
 .modal {
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  max-width: 500px;
+  max-width: 90vw;
   width: 90%;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }

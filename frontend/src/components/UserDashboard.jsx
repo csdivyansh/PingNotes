@@ -12,6 +12,7 @@ import {
   FaEllipsisV,
 } from "react-icons/fa";
 import { useGlobalFileUpload } from "./GlobalFileUploadContext";
+import FileSummary from "./FileSummary.jsx";
 
 const UserDashboard = () => {
   const [subjects, setSubjects] = useState([]);
@@ -51,6 +52,8 @@ const UserDashboard = () => {
   // Add local state for file menu in topic files
   const [topicFileMenuOpenId, setTopicFileMenuOpenId] = useState(null);
   const navigate = useNavigate();
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [summaryFileId, setSummaryFileId] = useState(null);
 
   useEffect(() => {
     fetchSubjects();
@@ -642,9 +645,8 @@ const UserDashboard = () => {
                                           </button>
                                           <button
                                             onClick={() => {
-                                              navigate(
-                                                `/files/${file._id}/summary`
-                                              );
+                                              setSummaryFileId(file._id);
+                                              setShowSummaryModal(true);
                                               setTopicFileMenuOpenId(null);
                                             }}
                                             className="file-menu-item"
@@ -659,7 +661,7 @@ const UserDashboard = () => {
                                               cursor: "pointer",
                                             }}
                                           >
-                                            View AI Summary
+                                            AI Summary
                                           </button>
                                         </div>
                                       )}
@@ -927,6 +929,44 @@ const UserDashboard = () => {
                 <button className="btn-secondary" onClick={closeShareModal}>
                   Cancel
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showSummaryModal && summaryFileId && (
+          <div
+            className="modal-overlay"
+            onClick={(e) => {
+              if (e.target.classList.contains("modal-overlay")) {
+                setShowSummaryModal(false);
+                setSummaryFileId(null);
+              }
+            }}
+          >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: 8,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setShowSummaryModal(false);
+                    setSummaryFileId(null);
+                  }}
+                  style={{
+                    fontSize: 22,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  &times;
+                </button>
+              <div style={{ padding: 24 }}>
+                <FileSummary fileId={summaryFileId} />
               </div>
             </div>
           </div>
