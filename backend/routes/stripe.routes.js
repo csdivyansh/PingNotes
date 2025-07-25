@@ -1,14 +1,14 @@
 import express from "express";
 import Stripe from "stripe";
+import dotenv from "dotenv";
+dotenv.config();
 const router = express.Router();
-const stripe = new Stripe(
-  "sk_test_51RooWw24lTC9QJi5GwJ6aHUUBLeSYz5tlr78HwU87KSqm3GPXsSuAE3kidVaISc50kVAH6hirss1ryKfgL5zeLwx00VQLLRneX"
-);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Replace with your actual Stripe price IDs
 const priceIds = {
-  Pro: "price_1RoooG24lTC9QJi5gnfW8Ux5",
-  Premium: "price_1Rooln24lTC9QJi5Xb56pvo0",
+  Pro: "price_pro_id", // TODO: Replace with real price ID
+  Premium: "price_premium_id", // TODO: Replace with real price ID
 };
 
 router.post("/create-checkout-session", async (req, res) => {
