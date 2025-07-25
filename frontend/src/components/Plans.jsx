@@ -3,17 +3,18 @@ import { FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import "./Plans.css";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
     name: "Free",
-    price: "$0/mo",
+    price: "₹0/mo",
     features: ["Access to basic notes", "Limited uploads", "Community support"],
     highlighted: false,
   },
   {
     name: "Pro",
-    price: "$9.99/mo",
+    price: "₹19.99/mo",
     features: [
       "Unlimited note storage",
       "Advanced search",
@@ -24,7 +25,7 @@ const plans = [
   },
   {
     name: "Premium",
-    price: "$29.99/mo",
+    price: "₹29.99/mo",
     features: [
       "Team collaboration tools",
       "Admin controls",
@@ -37,6 +38,7 @@ const plans = [
 ];
 
 export default function Plans() {
+  const navigate = useNavigate();
   return (
     <>
       <Navbar />
@@ -93,6 +95,9 @@ export default function Plans() {
                 className="choose-btn"
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={
+                  plan.name === "Free" ? () => navigate("/login") : undefined
+                }
               >
                 Choose {plan.name}
               </motion.button>
