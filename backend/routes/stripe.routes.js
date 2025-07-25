@@ -7,8 +7,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Replace with your actual Stripe price IDs
 const priceIds = {
-  Pro: "price_pro_id", // TODO: Replace with real price ID
-  Premium: "price_premium_id", // TODO: Replace with real price ID
+  Pro: "price_1RoooG24lTC9QJi5gnfW8Ux5", // TODO: Replace with real price ID
+  Premium: "price_1Rooln24lTC9QJi5Xb56pvo0", // TODO: Replace with real price ID
 };
 
 router.post("/create-checkout-session", async (req, res) => {
