@@ -20,6 +20,11 @@ const MyFiles = () => {
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [friendEmail, setFriendEmail] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [onConfirm, setOnConfirm] = useState(() => () => {});
 
   const navigate = useNavigate();
 
@@ -40,18 +45,25 @@ const MyFiles = () => {
     }
   };
 
-  const handleDelete = async (fileId) => {
+  const handleDelete = (fileId) => {
     if (!fileId) {
-      alert("Invalid file ID");
+      setModalMessage("Invalid file ID");
+      setModalOpen(true);
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this file?")) return;
+    setConfirmMessage("Are you sure you want to delete this file?");
+    setOnConfirm(() => () => handleDeleteConfirmed(fileId));
+    setConfirmOpen(true);
+  };
+
+  const handleDeleteConfirmed = async (fileId) => {
     setDeletingId(fileId);
     try {
       await apiService.request(`/api/files/${fileId}`, { method: "DELETE" });
       setFiles((prev) => prev.filter((f) => f._id !== fileId));
     } catch (err) {
-      alert("Failed to delete file");
+      setModalMessage("Failed to delete file");
+      setModalOpen(true);
     } finally {
       setDeletingId(null);
     }
@@ -370,6 +382,23 @@ const MyFiles = () => {
               <div style={{ padding: 24 }}>
                 <FileSummary fileId={summaryFileId} />
               </div>
+            </div>
+          </div>
+        )}
+        {modalOpen && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <p>{modalMessage}</p>
+              <button onClick={() => setModalOpen(false)} className="btn-primary">Close</button>
+            </div>
+          </div>
+        )}
+        {confirmOpen && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <p>{confirmMessage}</p>
+              <button onClick={() => { onConfirm(); setConfirmOpen(false); }} className="btn-danger">Yes</button>
+              <button onClick={() => setConfirmOpen(false)} className="btn-secondary">No</button>
             </div>
           </div>
         )}

@@ -79,7 +79,7 @@ const DashNav = () => {
               to="/dashboard"
               className={location.pathname === "/dashboard" ? "active" : ""}
             >
-              My Subjects
+            Subjects
             </Link>
             <Link
               to="/dashboard/files"
@@ -87,7 +87,7 @@ const DashNav = () => {
                 location.pathname === "/dashboard/files" ? "active" : ""
               }
             >
-              My Files
+              Notes
             </Link>
             <Link
               to="/dashboard/groups"
@@ -95,7 +95,7 @@ const DashNav = () => {
                 location.pathname === "/dashboard/groups" ? "active" : ""
               }
             >
-              My Groups
+              ToDos
             </Link>
             <Link
               to="/dashboard/trash"

@@ -14,7 +14,7 @@ export const topicSchema = new mongoose.Schema({
 
 const subjectSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  subject_code: { type: String, unique: true, sparse: true },
+  subject_code: { type: String, sparse: true },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: "created_by_role",

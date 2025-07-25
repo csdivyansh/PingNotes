@@ -10,6 +10,8 @@ import {
   FaPaperclip,
   FaShareAlt,
   FaEllipsisV,
+  FaChevronDown,
+  FaChevronRight,
 } from "react-icons/fa";
 import { useGlobalFileUpload } from "./GlobalFileUploadContext";
 import FileSummary from "./FileSummary.jsx";
@@ -54,6 +56,13 @@ const UserDashboard = () => {
   const navigate = useNavigate();
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [summaryFileId, setSummaryFileId] = useState(null);
+  // Add state for expanded topics
+  const [expandedTopics, setExpandedTopics] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [onConfirm, setOnConfirm] = useState(() => () => {});
 
   useEffect(() => {
     fetchSubjects();
@@ -90,7 +99,8 @@ const UserDashboard = () => {
       setShowAddSubject(false);
       fetchSubjects();
     } catch (error) {
-      alert("Failed to create subject: " + error.message);
+      setModalMessage("Failed to create subject: " + error.message);
+      setModalOpen(true);
     }
   };
 
@@ -103,7 +113,8 @@ const UserDashboard = () => {
       setSelectedSubject(null);
       fetchSubjects();
     } catch (error) {
-      alert("Failed to create topic: " + error.message);
+      setModalMessage("Failed to create topic: " + error.message);
+      setModalOpen(true);
     }
   };
 
@@ -192,31 +203,43 @@ const UserDashboard = () => {
     }
   };
 
-  const handleDeleteFile = async (fileId) => {
+  const handleDeleteFile = (fileId) => {
     if (!fileId) {
-      alert("Invalid file ID");
+      setModalMessage("Invalid file ID");
+      setModalOpen(true);
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this file?")) return;
+    setConfirmMessage("Are you sure you want to delete this file?");
+    setOnConfirm(() => () => handleDeleteFileConfirmed(fileId));
+    setConfirmOpen(true);
+  };
+  const handleDeleteFileConfirmed = async (fileId) => {
     try {
       await apiService.request(`/api/files/${fileId}`, { method: "DELETE" });
       fetchSubjects();
     } catch (err) {
-      alert("Failed to delete file");
+      setModalMessage("Failed to delete file");
+      setModalOpen(true);
     }
   };
 
-  const handleDeleteTopic = async (subjectId, topicId) => {
+  const handleDeleteTopic = (subjectId, topicId) => {
     if (!topicId || !subjectId) {
-      alert("Invalid topic or subject ID");
+      setModalMessage("Invalid topic or subject ID");
+      setModalOpen(true);
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this topic?")) return;
+    setConfirmMessage("Are you sure you want to delete this topic?");
+    setOnConfirm(() => () => handleDeleteTopicConfirmed(subjectId, topicId));
+    setConfirmOpen(true);
+  };
+  const handleDeleteTopicConfirmed = async (subjectId, topicId) => {
     try {
       await apiService.deleteTopic(subjectId, topicId);
       fetchSubjects();
     } catch (err) {
-      alert("Failed to delete topic");
+      setModalMessage("Failed to delete topic");
+      setModalOpen(true);
     }
   };
 
@@ -281,6 +304,15 @@ const UserDashboard = () => {
     if (topicFileInputRef.current) topicFileInputRef.current.value = "";
   };
 
+  // Helper to toggle topic expansion
+  const toggleTopic = (topicId) => {
+    setExpandedTopics((prev) =>
+      prev.includes(topicId)
+        ? prev.filter((id) => id !== topicId)
+        : [...prev, topicId]
+    );
+  };
+
   if (loading) {
     return (
       <div className="user-dashboard">
@@ -303,21 +335,13 @@ const UserDashboard = () => {
       <div className="user-dashboard">
         <main className="dashboard-main2">
           <header className="dashboard-header">
-            <h1>My Subjects ({subjects.length})</h1>
+            <h1>My Subjects</h1>
             <div style={{ display: "flex" }}>
               <button
                 className="add-subject-btn"
                 onClick={() => setShowAddSubject(true)}
               >
                 + Add Subject
-              </button>
-              {/* Mobile Upload File Button */}
-              <button
-                className="upload-file-btn-mobile"
-                onClick={openUploadModal}
-                type="button"
-              >
-                Upload File
               </button>
             </div>
           </header>
@@ -365,7 +389,7 @@ const UserDashboard = () => {
                 >
                   <div className="subject-header">
                     <h3>{subject.name}</h3>
-                    <span className="subject-code">{subject.subject_code}</span>
+                    {/* <span className="subject-code">{subject.subject_code}</span> */}
 
                     {/* Dropdown menu */}
                     {subjectMenuOpenId === subject._id && (
@@ -448,197 +472,252 @@ const UserDashboard = () => {
                       <div className="topics-list">
                         {subject.topics.map((topic) => (
                           <div key={topic._id} className="topic-item">
-                            <div className="topic-info">
-                              <h5>{topic.name}</h5>
-                              {topic.description && (
-                                <p className="topic-description">
-                                  {topic.description}
-                                </p>
-                              )}
-                            </div>
-                            <button
-                              className="btn-danger"
-                              style={{
-                                marginBottom: 8,
-                                float: "right",
-                                display: "inline-flex",
-                                alignItems: "center",
-                              }}
-                              onClick={() =>
-                                handleDeleteTopic(subject._id, topic._id)
-                              }
-                              title="Delete Topic"
+                            <div
+                              className="topic-header"
+                              style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+                              onClick={() => toggleTopic(topic._id)}
                             >
-                              <FaTrash />
-                            </button>
-
-                            <div className="topic-actions">
-                              <button
-                                className="upload-file-icon-btn"
-                                title="Upload File"
-                                style={{
-                                  background: "#e0e7ef",
-                                  border: "none",
-                                  borderRadius: "50%",
-                                  width: 36,
-                                  height: 36,
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                  marginRight: 8,
-                                  fontSize: 18,
-                                  transition: "background 0.2s",
-                                }}
-                                onClick={() => {
-                                  setTopicUploadTarget({ subject, topic });
-                                  if (topicFileInputRef.current)
-                                    topicFileInputRef.current.click();
-                                }}
-                              >
-                                <FaPaperclip />
-                              </button>
-                              {/* Hidden file input for topic upload */}
-                              <input
-                                type="file"
-                                ref={topicFileInputRef}
-                                style={{ display: "none" }}
-                                onChange={handleTopicFileChange}
-                                accept="*"
-                              />
-
-                              {topic.files && topic.files.length > 0 && (
-                                <div className="files-list">
-                                  {topic.files.map((file, fileIdx) => (
+                              {expandedTopics.includes(topic._id) ? (
+                                <FaChevronDown style={{ marginRight: 8 }} />
+                              ) : (
+                                <FaChevronRight style={{ marginRight: 8 }} />
+                              )}
+                              <h5 style={{ margin: 0 }}>{topic.name}</h5>
+                            </div>
+                            {expandedTopics.includes(topic._id) && (
+                              <>
+                                {topic.description && (
+                                  <p className="topic-description">{topic.description}</p>
+                                )}
+                                <div className="topic-actions" style={{ position: "relative" }}>
+                                  <button
+                                    className="file-menu-btn"
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      fontSize: 20,
+                                      marginLeft: 8,
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setTopicFileMenuOpenId(
+                                        topicFileMenuOpenId === topic._id ? null : topic._id
+                                      );
+                                    }}
+                                    aria-label="Topic actions"
+                                  >
+                                    <FaEllipsisV />
+                                  </button>
+                                  {topicFileMenuOpenId === topic._id && (
                                     <div
-                                      key={file._id || fileIdx}
-                                      className="file-item"
-                                      style={{ position: "relative" }}
+                                      className="file-menu-dropdown"
+                                      style={{
+                                        position: "absolute",
+                                        top: 36,
+                                        right: 0,
+                                        background: "#fff",
+                                        border: "1px solid #e5e7eb",
+                                        borderRadius: 8,
+                                        boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                                        zIndex: 10,
+                                        minWidth: 140,
+                                      }}
                                     >
-                                      <span className="file-name">
-                                        {file.name}
-                                      </span>
-                                      {/* 3-dots menu button */}
                                       <button
-                                        className="file-menu-btn"
+                                        className="file-menu-item"
                                         style={{
+                                          display: "block",
+                                          width: "100%",
+                                          padding: "10px 18px",
+                                          color: "#222",
                                           background: "none",
                                           border: "none",
+                                          textAlign: "left",
                                           cursor: "pointer",
-                                          fontSize: 20,
-                                          marginLeft: 8,
+                                          borderBottom: "1px solid #f1f1f1",
                                         }}
-                                        onClick={() =>
-                                          setTopicFileMenuOpenId(
-                                            topicFileMenuOpenId === file._id
-                                              ? null
-                                              : file._id
-                                          )
-                                        }
-                                        aria-label="File actions"
+                                        onClick={() => {
+                                          setTopicUploadTarget({ subject, topic });
+                                          if (topicFileInputRef.current) topicFileInputRef.current.click();
+                                          setTopicFileMenuOpenId(null);
+                                        }}
                                       >
-                                        <FaEllipsisV />
+                                        Upload File
                                       </button>
-                                      {/* Dropdown menu */}
-                                      {topicFileMenuOpenId === file._id && (
-                                        <div
-                                          className="file-menu-dropdown"
-                                          style={{
-                                            position: "absolute",
-                                            top: 44,
-                                            right: 16,
-                                            background: "#fff",
-                                            border: "1px solid #e5e7eb",
-                                            borderRadius: 8,
-                                            boxShadow:
-                                              "0 4px 16px rgba(0,0,0,0.08)",
-                                            zIndex: 10,
-                                            minWidth: 140,
-                                          }}
-                                        >
-                                          <a
-                                            href={file.drive_file_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="file-menu-item"
-                                            style={{
-                                              display: "block",
-                                              padding: "10px 18px",
-                                              color: "#222",
-                                              textDecoration: "none",
-                                              cursor: "pointer",
-                                              borderBottom: "1px solid #f1f1f1",
-                                            }}
-                                          >
-                                            View
-                                          </a>
-                                          <button
-                                            onClick={() => {
-                                              handleDeleteFile(file._id);
-                                              setTopicFileMenuOpenId(null);
-                                            }}
-                                            className="file-menu-item"
-                                            style={{
-                                              display: "block",
-                                              width: "100%",
-                                              padding: "10px 18px",
-                                              color: "#ef4444",
-                                              background: "none",
-                                              border: "none",
-                                              textAlign: "left",
-                                              cursor: "pointer",
-                                              borderBottom: "1px solid #f1f1f1",
-                                            }}
-                                          >
-                                            Delete
-                                          </button>
-                                          <button
-                                            onClick={() => {
-                                              openShareModal(file);
-                                              setTopicFileMenuOpenId(null);
-                                            }}
-                                            className="file-menu-item"
-                                            style={{
-                                              display: "block",
-                                              width: "100%",
-                                              padding: "10px 18px",
-                                              color: "#2563eb",
-                                              background: "none",
-                                              border: "none",
-                                              textAlign: "left",
-                                              cursor: "pointer",
-                                              borderBottom: "1px solid #f1f1f1",
-                                            }}
-                                          >
-                                            Share
-                                          </button>
-                                          <button
-                                            onClick={() => {
-                                              setSummaryFileId(file._id);
-                                              setShowSummaryModal(true);
-                                              setTopicFileMenuOpenId(null);
-                                            }}
-                                            className="file-menu-item"
-                                            style={{
-                                              display: "block",
-                                              width: "100%",
-                                              padding: "10px 18px",
-                                              color: "#2563eb",
-                                              background: "none",
-                                              border: "none",
-                                              textAlign: "left",
-                                              cursor: "pointer",
-                                            }}
-                                          >
-                                            AI Summary
-                                          </button>
-                                        </div>
-                                      )}
+                                      <button
+                                        className="file-menu-item"
+                                        style={{
+                                          display: "block",
+                                          width: "100%",
+                                          padding: "10px 18px",
+                                          color: "#ef4444",
+                                          background: "none",
+                                          border: "none",
+                                          textAlign: "left",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          handleDeleteTopic(subject._id, topic._id);
+                                          setTopicFileMenuOpenId(null);
+                                        }}
+                                      >
+                                        Delete Topic
+                                      </button>
                                     </div>
-                                  ))}
+                                  )}
+                                  {/* Hidden file input for topic upload */}
+                                  <input
+                                    type="file"
+                                    ref={topicFileInputRef}
+                                    style={{ display: "none" }}
+                                    onChange={handleTopicFileChange}
+                                    accept="*"
+                                  />
                                 </div>
-                              )}
-                            </div>
+                                {topic.files && topic.files.length > 0 && (
+                                  <div className="files-list">
+                                    {topic.files.map((file, fileIdx) => (
+                                      <div
+                                        key={file._id || fileIdx}
+                                        className="file-item"
+                                        style={{ position: "relative" }}
+                                      >
+                                        <span className="file-name">
+                                          {file.name}
+                                        </span>
+                                        {/* 3-dots menu button */}
+                                        <button
+                                          className="file-menu-btn"
+                                          style={{
+                                            background: "none",
+                                            border: "none",
+                                            cursor: "pointer",
+                                            fontSize: 20,
+                                            marginLeft: 8,
+                                          }}
+                                          onClick={() =>
+                                            setTopicFileMenuOpenId(
+                                              topicFileMenuOpenId === file._id
+                                                ? null
+                                                : file._id
+                                            )
+                                          }
+                                          aria-label="File actions"
+                                        >
+                                          <FaEllipsisV />
+                                        </button>
+                                        {/* Dropdown menu */}
+                                        {topicFileMenuOpenId === file._id && (
+                                          <div
+                                            className="file-menu-dropdown"
+                                            style={{
+                                              position: "absolute",
+                                              top: 44,
+                                              right: 16,
+                                              background: "#fff",
+                                              border: "1px solid #e5e7eb",
+                                              borderRadius: 8,
+                                              boxShadow:
+                                                "0 4px 16px rgba(0,0,0,0.08)",
+                                              zIndex: 10,
+                                              minWidth: 140,
+                                            }}
+                                          >
+                                            <button
+                                              onClick={() => {
+                                                setSummaryFileId(file._id);
+                                                setShowSummaryModal(true);
+                                                setTopicFileMenuOpenId(null);
+                                              }}
+                                              className="file-menu-item"
+                                              style={{
+                                                display: "block",
+                                                width: "100%",
+                                                padding: "10px 18px",
+                                                color: "#2563eb",
+                                                background: "none",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #f1f1f1",
+                                              }}
+                                            >
+                                              AI Summary
+                                            </button>
+                                            <a
+                                              href={file.drive_file_url}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="file-menu-item"
+                                              style={{
+                                                display: "block",
+                                                width: "100%",
+                                                padding: "10px 18px",
+                                                color: "#222",
+                                                textDecoration: "none",
+                                                cursor: "pointer",
+                                                fontSize: "15px",
+                                                fontWeight: "400",
+                                                textAlign: "left",
+                                              
+                                                background: "none",
+                                                border: "none",
+                                                borderBottom: "1px solid #f1f1f1",
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                            <button
+                                              onClick={() => {
+                                                openShareModal(file);
+                                                setTopicFileMenuOpenId(null);
+                                              }}
+                                              className="file-menu-item"
+                                              style={{
+                                                display: "block",
+                                                width: "100%",
+                                                padding: "10px 18px",
+                                                color: "#2563eb",
+                                                background: "none",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #f1f1f1",
+                                              }}
+                                            >
+                                              Share
+                                            </button>
+                                            <button
+                                              onClick={() => {
+                                                handleDeleteFile(file._id);
+                                                setTopicFileMenuOpenId(null);
+                                              }}
+                                              className="file-menu-item"
+                                              style={{
+                                                display: "block",
+                                                width: "100%",
+                                                padding: "10px 18px",
+                                                color: "#ef4444",
+                                                background: "none",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #f1f1f1",
+                                              }}
+                                            >
+                                              Delete
+                                            </button>
+                                            
+                                            
+                                          </div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -682,7 +761,6 @@ const UserDashboard = () => {
                         subject_code: e.target.value,
                       })
                     }
-                    required
                   />
                 </div>
                 <div className="modal-actions">
@@ -962,7 +1040,29 @@ const UserDashboard = () => {
             display: none !important;
           }
         }
+        .file-menu-item:hover, .file-menu-item:focus {
+          background: #f5faff;
+          color: #2563eb;
+          outline: none;
+        }
       `}</style>
+      {modalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>{modalMessage}</p>
+            <button onClick={() => setModalOpen(false)} className="btn-primary">Close</button>
+          </div>
+        </div>
+      )}
+      {confirmOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>{confirmMessage}</p>
+            <button onClick={() => { onConfirm(); setConfirmOpen(false); }} className="btn-danger">Yes</button>
+            <button onClick={() => setConfirmOpen(false)} className="btn-secondary">No</button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

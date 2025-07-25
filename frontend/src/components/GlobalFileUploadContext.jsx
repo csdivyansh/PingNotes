@@ -15,6 +15,8 @@ export function GlobalFileUploadProvider({ children }) {
   const [subjectInput, setSubjectInput] = useState("");
   const [uploadedFileId, setUploadedFileId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const openUploadModal = () => setShowModal(true);
   const closeUploadModal = () => {
@@ -49,7 +51,8 @@ export function GlobalFileUploadProvider({ children }) {
         setUploadedFileId(response.files && response.files[0]?._id);
       }
     } catch (err) {
-      alert("File upload failed");
+      setModalMessage("File upload failed");
+      setModalOpen(true);
       closeUploadModal();
     } finally {
       setLoading(false);
@@ -67,7 +70,8 @@ export function GlobalFileUploadProvider({ children }) {
       closeUploadModal();
       window.location.reload(); // Refresh to show new subject/file
     } catch (err) {
-      alert("Failed to create/associate subject");
+      setModalMessage("Failed to create/associate subject");
+      setModalOpen(true);
       setLoading(false);
     }
   };
@@ -162,6 +166,14 @@ export function GlobalFileUploadProvider({ children }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {modalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>{modalMessage}</p>
+            <button onClick={() => setModalOpen(false)} className="btn-primary">Close</button>
           </div>
         </div>
       )}
