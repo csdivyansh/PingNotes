@@ -4,10 +4,7 @@ import apiService from "../services/api.js";
 import Navbar from "./Navbar";
 import Footer from "./Footer.jsx";
 
-const roles = [
-  { label: "Student" },
-  { label: "Administrator" },
-];
+const roles = [{ label: "Student" }, { label: "Administrator" }];
 
 const GOOGLE_CLIENT_ID =
   import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID";
@@ -102,7 +99,13 @@ function RoleSelection() {
 
       // Close modal and navigate to dashboard
       setShowModal(false);
-      navigate("/dashboard");
+      const redirectPath = localStorage.getItem("postLoginRedirect");
+      if (redirectPath) {
+        localStorage.removeItem("postLoginRedirect");
+        navigate(redirectPath);
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error("Google login failed:", error);
       alert("Login failed. Please try again.");
@@ -130,7 +133,11 @@ function RoleSelection() {
       // Redirect to backend OAuth endpoint for Google login with Drive access
       const apiBase = import.meta.env.VITE_API_URL || "";
       const rolePath = role === "Teacher" ? "teacher" : "user";
-      window.location.href = `${apiBase}/api/auth/google/${rolePath}`;
+      const intendedRedirect =
+        localStorage.getItem("postLoginRedirect") || "/dashboard";
+      window.location.href = `${apiBase}/api/auth/google/${rolePath}?redirect=${encodeURIComponent(
+        intendedRedirect
+      )}`;
     }
   };
 
@@ -152,7 +159,7 @@ function RoleSelection() {
           className="role-selection-heading"
           style={{ marginBottom: 70, fontSize: 50, textAlign: "center" }}
         >
-          You are a/an......
+          You are a...
         </h2>
         <div
           className="role-selection-btns"

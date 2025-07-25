@@ -14,8 +14,8 @@ const AuthSuccess = () => {
       localStorage.setItem("userToken", token);
       localStorage.setItem("userRole", role);
 
-      // Redirect to dashboard
-      navigate("/dashboard");
+      // Always redirect to /plans after login
+      navigate("/plans");
     } else {
       // If no token, redirect to home
       navigate("/");

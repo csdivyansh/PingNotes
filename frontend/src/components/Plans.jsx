@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import "./Plans.css";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const plans = [
   {
@@ -39,6 +40,36 @@ const plans = [
 
 export default function Plans() {
   const navigate = useNavigate();
+  const [loadingPlan, setLoadingPlan] = useState(null);
+
+  const handlePaidPlan = async (planName) => {
+    const token =
+      localStorage.getItem("userToken") || localStorage.getItem("adminToken");
+    if (!token) {
+      localStorage.setItem("postLoginRedirect", "/plans");
+      navigate("/login");
+      return;
+    }
+    setLoadingPlan(planName);
+    try {
+      const res = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planName }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Failed to start payment session.");
+      }
+    } catch (err) {
+      alert("Error connecting to payment server.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -96,10 +127,15 @@ export default function Plans() {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={
-                  plan.name === "Free" ? () => navigate("/login") : undefined
+                  plan.name === "Free"
+                    ? () => navigate("/login")
+                    : () => handlePaidPlan(plan.name)
                 }
+                disabled={loadingPlan === plan.name}
               >
-                Choose {plan.name}
+                {loadingPlan === plan.name
+                  ? "Redirecting..."
+                  : `Choose ${plan.name}`}
               </motion.button>
             </motion.div>
           ))}

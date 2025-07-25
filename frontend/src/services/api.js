@@ -34,6 +34,13 @@ class ApiService {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          alert(
+            "Your session has expired or you are not logged in. Please log in again."
+          );
+          window.location.href = "/login";
+          return;
+        }
         throw new Error(
           data.message || `HTTP error! status: ${response.status}`
         );
