@@ -171,19 +171,6 @@ const UserDashboard = () => {
     }
   };
 
-  const handleGoogleDriveAuth = async () => {
-    try {
-      // Redirect to Google OAuth for Drive access
-      const role = localStorage.getItem("userRole") || "user";
-      const apiBase = import.meta.env.VITE_API_URL || "";
-      const authUrl = `${apiBase}/api/auth/google/${role}`;
-      window.location.href = authUrl;
-    } catch (error) {
-      console.error("Google Drive auth error:", error);
-      alert("Failed to authorize Google Drive: " + error.message);
-    }
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setUploadFile(file);
@@ -332,24 +319,6 @@ const UserDashboard = () => {
               >
                 Upload File
               </button>
-              {needsGoogleDriveAuth && (
-                <button
-                  type="button"
-                  className="google-drive-auth-btn"
-                  onClick={handleGoogleDriveAuth}
-                  style={{
-                    background: "#4285f4",
-                    color: "white",
-                    border: "none",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                  }}
-                >
-                  🔗 Authorize Google Drive
-                </button>
-              )}
             </div>
           </header>
 

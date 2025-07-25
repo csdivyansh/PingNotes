@@ -6,7 +6,6 @@ import Footer from "./Footer.jsx";
 
 const roles = [
   { label: "Student" },
-  { label: "Teacher" },
   { label: "Administrator" },
 ];
 
@@ -128,8 +127,10 @@ function RoleSelection() {
     if (role === "Administrator") {
       navigate("/admin/login");
     } else {
-      setSelectedRole(role);
-      setShowModal(true);
+      // Redirect to backend OAuth endpoint for Google login with Drive access
+      const apiBase = import.meta.env.VITE_API_URL || "";
+      const rolePath = role === "Teacher" ? "teacher" : "user";
+      window.location.href = `${apiBase}/api/auth/google/${rolePath}`;
     }
   };
 
@@ -176,58 +177,6 @@ function RoleSelection() {
             </button>
           ))}
         </div>
-        {showModal && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              background: "rgba(0,0,0,0.4)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 1000,
-            }}
-          >
-            <div
-              style={{
-                background: "#fff",
-                padding: "2rem 2.5rem",
-                borderRadius: 16,
-                boxShadow: "0 4px 32px 0 rgba(0,0,0,0.18)",
-                minWidth: 320,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <h3 style={{ marginBottom: 24 }}>
-                Sign in as {selectedRole} with Google
-              </h3>
-              <div
-                ref={buttonDivRef}
-                id="buttonDiv"
-                style={{ marginBottom: 16 }}
-              ></div>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{
-                  background: "#eee",
-                  color: "#333",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "8px 24px",
-                  fontSize: 16,
-                  cursor: "pointer",
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       <Footer className="fixed-footer" />
       <style>{`

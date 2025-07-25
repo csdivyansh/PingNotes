@@ -14,7 +14,7 @@ passport.use(
       callbackURL:
         process.env.GOOGLE_USER_CALLBACK_URL ||
         "http://localhost:5000/api/auth/google/user/callback",
-      scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+      // Do NOT set 'scope', 'accessType', or 'prompt' here. These are set in the route for flexibility.
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -68,7 +68,7 @@ passport.use(
       callbackURL:
         process.env.GOOGLE_TEACHER_CALLBACK_URL ||
         "http://localhost:5000/api/auth/google/teacher/callback",
-      scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+      // Do NOT set 'scope', 'accessType', or 'prompt' here. These are set in the route for flexibility.
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
