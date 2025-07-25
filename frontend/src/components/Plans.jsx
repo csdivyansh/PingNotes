@@ -5,6 +5,7 @@ import "./Plans.css";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 const plans = [
   {
@@ -52,11 +53,14 @@ export default function Plans() {
     }
     setLoadingPlan(planName);
     try {
-      const res = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planName }),
-      });
+      const res = await fetch(
+        `${API_BASE_URL}/api/stripe/create-checkout-session`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan: planName }),
+        }
+      );
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
