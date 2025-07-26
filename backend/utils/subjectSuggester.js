@@ -7,11 +7,32 @@ const GEMINI_API_URL =
   GEMINI_API_KEY;
 
 const SUBJECT_CANDIDATES = [
-  "Database Management Systems",
+  "Science",
+  "Space",
+  "Astronomy",
+  "Outer Space",
+  "Technology",
+  "Engineering",
+  "Environment",
+  "Earth Science",
+  "Social Studies",
+  "Art",
+  "Nature",
+  "Wildlife",
+  "Photography",
+  "Architecture",
+  "Food",
+  "Travel",
+  "Sports",
+  "Business",
+  "Health",
+  "Fashion",
+  "Music",
+  "Literature",
+  "History",
   "Mathematics",
   "Physics",
   "Programming",
-  "History",
   "Biology",
   "Chemistry",
   "Economics",
@@ -24,45 +45,22 @@ const SUBJECT_CANDIDATES = [
   "Web Development",
   "Machine Learning",
   "Software Engineering",
-  "Nature",
-  "Art",
-  "Photography",
-  "Architecture",
-  "Food",
-  "Travel",
-  "Sports",
-  "Technology",
-  "Business",
-  "Health",
-  "Fashion",
-  "Music",
-  "Literature",
   // ...add more as needed
 ];
 
 export async function normalizeSubjectWithGemini(subject) {
   if (!subject) return subject;
-  const prompt = `Given the subject name "${subject}", map it to its full canonical academic subject name from this list: [${SUBJECT_CANDIDATES.join(
-    ", "
-  )}]. Respond with only the canonical name.`;
-  const body = {
-    contents: [{ parts: [{ text: prompt }] }],
-  };
-  try {
-    const response = await fetch(GEMINI_API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const result = await response.json();
-    console.log("Gemini normalization result:", result);
-    const normalized =
-      result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    return normalized || subject;
-  } catch (err) {
-    console.error("Gemini normalization error:", err);
+  // If the subject is already in the candidates list (case-insensitive), accept it
+  const found = SUBJECT_CANDIDATES.find(
+    (s) => s.toLowerCase() === subject.toLowerCase()
+  );
+  if (found) return found;
+  // If not, accept the Gemini suggestion as a new subject if it's not generic
+  if (subject.length > 2 && !["picture", "photo", "image", "document", "file"].includes(subject.toLowerCase())) {
     return subject;
   }
+  // Otherwise, fallback to original subject
+  return subject;
 }
 
 export async function suggestTopicFromText(text) {
@@ -193,16 +191,7 @@ export async function suggestSubjectFromImage(imagePath) {
     const base64Image = encodeImageToBase64(imagePath);
     const mimeType = getMimeType(imagePath);
     
-    const prompt = `Analyze this image and determine the most appropriate category/subject. Choose from: [${SUBJECT_CANDIDATES.join(
-      ", "
-    )}]. Consider the visual content, objects, scenes, or any text present. For example:
-    - Nature photos (flowers, landscapes, animals) → "Nature"
-    - Art pieces, paintings, drawings → "Art"
-    - Buildings, structures → "Architecture"
-    - Food items → "Food"
-    - Technology devices → "Technology"
-    - Academic content (equations, diagrams, text) → appropriate academic subject
-    Respond with only the subject name.`;
+    const prompt = `Analyze this image and suggest the most relevant subject. The subject should be as specific and modern as possible (e.g., "Science", "Space", "Astronomy", "Technology", "Art", "Nature", "Engineering", "History", "Mathematics", "Biology", "Physics", "Chemistry", "Geography", "Social Studies", etc.). If the image is about space, astronauts, planets, or rockets, prefer subjects like "Science", "Space", or "Astronomy" over "History". Avoid generic answers like "picture", "photo", or "image". Respond with only the subject name. If the subject is not in the provided list, you may suggest a new relevant subject if it fits better.`;
     
     const body = {
       contents: [{
@@ -228,7 +217,6 @@ export async function suggestSubjectFromImage(imagePath) {
     console.log("✅ Gemini image analysis completed successfully");
     
     let subject = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    
     if (subject) {
       subject = await normalizeSubjectWithGemini(subject);
     }

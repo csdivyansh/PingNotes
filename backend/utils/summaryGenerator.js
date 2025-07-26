@@ -4,7 +4,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
   GEMINI_API_KEY;
-const MAX_PROMPT_LENGTH = 8000; // Adjust as needed for Gemini's limits
+const MAX_PROMPT_LENGTH = 100000; // Adjust as needed for Gemini's limits
 
 /**
  * Generate an AI summary for a file's extracted text using Google Gemini.
