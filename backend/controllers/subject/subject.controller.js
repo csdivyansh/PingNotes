@@ -305,7 +305,7 @@ export const removeFileFromTopic = async (req, res) => {
 };
 
 export const aiLinkSubjectToFile = async (req, res) => {
-  const { subjectName, fileId } = req.body;
+  const { subjectName, topicName, fileId } = req.body;
   if (!subjectName || !fileId) {
     return res
       .status(400)
@@ -329,17 +329,27 @@ export const aiLinkSubjectToFile = async (req, res) => {
       });
       await subject.save();
     }
-    // Find or create 'General' topic
-    let generalTopic = subject.topics.find((t) => t.name === "General");
-    if (!generalTopic) {
-      subject.topics.push({ name: "General", description: "General files" });
-      await subject.save();
-      generalTopic = subject.topics.find((t) => t.name === "General");
+    // Find or create topic
+    let topic = null;
+    if (topicName) {
+      topic = subject.topics.find((t) => t.name === topicName);
+      if (!topic) {
+        subject.topics.push({ name: topicName, description: "AI suggested topic" });
+        await subject.save();
+        topic = subject.topics.find((t) => t.name === topicName);
+      }
+    } else {
+      topic = subject.topics.find((t) => t.name === "General");
+      if (!topic) {
+        subject.topics.push({ name: "General", description: "General files" });
+        await subject.save();
+        topic = subject.topics.find((t) => t.name === "General");
+      }
     }
-    // Add file to 'General' topic if not already present
-    if (!generalTopic.files) generalTopic.files = [];
-    if (!generalTopic.files.some((fId) => fId.toString() === fileId)) {
-      generalTopic.files.push(fileId);
+    // Add file to topic if not already present
+    if (!topic.files) topic.files = [];
+    if (!topic.files.some((fId) => fId.toString() === fileId)) {
+      topic.files.push(fileId);
       await subject.save();
     }
     // Link file to subject and topic
@@ -348,11 +358,12 @@ export const aiLinkSubjectToFile = async (req, res) => {
       return res.status(404).json({ message: "File not found" });
     }
     file.linked_subject = subject._id;
-    file.linked_topic = generalTopic._id;
+    file.linked_topic = topic._id;
     await file.save();
     res.json({
       message: "Subject and topic linked to file successfully",
       subject,
+      topic,
     });
   } catch (error) {
     console.error("AI subject link error:", error);

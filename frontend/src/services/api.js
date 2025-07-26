@@ -264,10 +264,10 @@ class ApiService {
   }
 
   // Create subject and link file
-  async createSubjectAndLinkFile({ subjectName, fileId }) {
+  async createSubjectAndLinkFile({ subjectName, topicName, fileId }) {
     return this.request("/api/subjects/ai-link", {
       method: "POST",
-      body: JSON.stringify({ subjectName, fileId }),
+      body: JSON.stringify({ subjectName, topicName, fileId }),
     });
   }
 

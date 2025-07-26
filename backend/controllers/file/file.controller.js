@@ -8,7 +8,7 @@ import { refreshGoogleToken } from "../../services/googleAuth.service.js";
 import User from "../../models/user.model.js";
 import Teacher from "../../models/teacher.model.js";
 import { extractTextFromFile } from "../../utils/fileTextExtractor.js";
-import { suggestSubjectFromText } from "../../utils/subjectSuggester.js";
+import { suggestSubjectAndTopicFromFile } from "../../utils/subjectSuggester.js";
 import mongoose from "mongoose";
 import Subject from "../../models/subject.model.js";
 import { generateSummary } from "../../utils/summaryGenerator.js";
@@ -32,7 +32,8 @@ export const uploadFiles = async (req, res) => {
 
     const savedFiles = [];
     let userAccessToken = null;
-    let suggestedSubject = null; // <-- Move here, outside the loop
+    let suggestedSubject = null;
+    let suggestedTopic = null;
 
     // Get user's Google access token
     if (req.user.role === "user") {
@@ -138,17 +139,19 @@ export const uploadFiles = async (req, res) => {
           .json({ message: "Error saving file to database." });
       }
 
-      // --- AI-powered subject suggestion ---
+      // --- AI-powered subject & topic suggestion ---
       try {
-        const text = await extractTextFromFile(file.path, file.mimetype);
-        suggestedSubject = await suggestSubjectFromText(text);
+        const result = await suggestSubjectAndTopicFromFile(file.path, file.mimetype);
+        suggestedSubject = result.subject;
+        suggestedTopic = result.topic;
         console.log("Final subject for file:", suggestedSubject);
+        console.log("Final topic for file:", suggestedTopic);
       } catch (extractErr) {
-        console.error("Text extraction/subject suggestion error:", extractErr);
+        console.error("Text extraction/subject/topic suggestion error:", extractErr);
       }
 
       try {
-        fs.unlinkSync(file.path); // �� Clean temp
+        fs.unlinkSync(file.path); //  Clean temp
         console.log("Temp file cleaned:", file.path);
       } catch (cleanupError) {
         console.error("File cleanup error:", cleanupError);
@@ -164,6 +167,7 @@ export const uploadFiles = async (req, res) => {
       message: `${savedFiles.length} file(s) uploaded successfully`,
       files: savedFiles,
       suggestedSubject: savedFiles.length > 0 ? suggestedSubject : null,
+      suggestedTopic: savedFiles.length > 0 ? suggestedTopic : null,
     });
   } catch (error) {
     console.error("Upload error:", error);

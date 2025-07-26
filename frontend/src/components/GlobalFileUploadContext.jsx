@@ -12,7 +12,9 @@ export function GlobalFileUploadProvider({ children }) {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [suggestedSubject, setSuggestedSubject] = useState("");
+  const [suggestedTopic, setSuggestedTopic] = useState("");
   const [subjectInput, setSubjectInput] = useState("");
+  const [topicInput, setTopicInput] = useState("");
   const [uploadedFileId, setUploadedFileId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,7 +26,9 @@ export function GlobalFileUploadProvider({ children }) {
     setUploadFile(null);
     setUploadProgress(0);
     setSuggestedSubject("");
+    setSuggestedTopic("");
     setSubjectInput("");
+    setTopicInput("");
     setUploadedFileId(null);
     setLoading(false);
   };
@@ -45,9 +49,11 @@ export function GlobalFileUploadProvider({ children }) {
         setUploadProgress(progress)
       );
       console.log("Upload response:", response); // Debug log
-      if (response.suggestedSubject) {
-        setSuggestedSubject(response.suggestedSubject);
-        setSubjectInput(response.suggestedSubject);
+      if (response.suggestedSubject || response.suggestedTopic) {
+        setSuggestedSubject(response.suggestedSubject || "");
+        setSuggestedTopic(response.suggestedTopic || "");
+        setSubjectInput(response.suggestedSubject || "");
+        setTopicInput(response.suggestedTopic || "");
         setUploadedFileId(response.files && response.files[0]?._id);
       }
     } catch (err) {
@@ -59,18 +65,19 @@ export function GlobalFileUploadProvider({ children }) {
     }
   };
 
-  const handleConfirmSubject = async () => {
-    if (!subjectInput || !uploadedFileId) return;
+  const handleConfirmSubjectAndTopic = async () => {
+    if ((!subjectInput && !topicInput) || !uploadedFileId) return;
     setLoading(true);
     try {
       await apiService.createSubjectAndLinkFile({
         subjectName: subjectInput,
+        topicName: topicInput,
         fileId: uploadedFileId,
       });
       closeUploadModal();
       window.location.reload(); // Refresh to show new subject/file
     } catch (err) {
-      setModalMessage("Failed to create/associate subject");
+      setModalMessage("Failed to create/associate subject/topic");
       setModalOpen(true);
       setLoading(false);
     }
@@ -88,9 +95,12 @@ export function GlobalFileUploadProvider({ children }) {
         handleFileChange,
         handleFileUpload,
         suggestedSubject,
+        suggestedTopic,
         subjectInput,
         setSubjectInput,
-        handleConfirmSubject,
+        topicInput,
+        setTopicInput,
+        handleConfirmSubjectAndTopic,
         loading,
       }}
     >
@@ -98,7 +108,7 @@ export function GlobalFileUploadProvider({ children }) {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h3>Upload File & Confirm Subject</h3>
+            <h3>Upload File & Confirm Subject/Topic</h3>
             <form onSubmit={handleFileUpload}>
               <div className="form-group">
                 <label>Select File:</label>
@@ -114,7 +124,7 @@ export function GlobalFileUploadProvider({ children }) {
                 </div>
               )}
               {/* Show AI loading message if file is uploaded but suggestion not ready */}
-              {uploadFile && !suggestedSubject && loading && (
+              {uploadFile && !suggestedSubject && !suggestedTopic && loading && (
                 <div
                   style={{
                     margin: "1rem 0",
@@ -122,23 +132,34 @@ export function GlobalFileUploadProvider({ children }) {
                     fontWeight: 500,
                   }}
                 >
-                  Using AI to get file subject...
+                  Using AI to get file subject and topic...
                 </div>
               )}
               {/* Show AI suggestion if available */}
-              {suggestedSubject && (
-                <div className="form-group">
-                  <label>AI Thinks the subject is:</label>
-                  <input
-                    type="text"
-                    value={subjectInput}
-                    onChange={(e) => setSubjectInput(e.target.value)}
-                    required
-                  />
-                </div>
+              {(suggestedSubject || suggestedTopic) && (
+                <>
+                  <div className="form-group">
+                    <label>AI Thinks the subject is:</label>
+                    <input
+                      type="text"
+                      value={subjectInput}
+                      onChange={(e) => setSubjectInput(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>AI Thinks the topic is:</label>
+                    <input
+                      type="text"
+                      value={topicInput}
+                      onChange={(e) => setTopicInput(e.target.value)}
+                      required
+                    />
+                  </div>
+                </>
               )}
               <div className="modal-actions">
-                {!suggestedSubject ? (
+                {!(suggestedSubject || suggestedTopic) ? (
                   <button
                     type="submit"
                     className="btn-primary"
@@ -150,10 +171,10 @@ export function GlobalFileUploadProvider({ children }) {
                   <button
                     type="button"
                     className="btn-primary"
-                    onClick={handleConfirmSubject}
+                    onClick={handleConfirmSubjectAndTopic}
                     disabled={loading}
                   >
-                    {loading ? "Saving..." : "Confirm Subject"}
+                    {loading ? "Saving..." : "Confirm Subject & Topic"}
                   </button>
                 )}
                 <button
